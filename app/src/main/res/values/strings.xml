@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Al-Quran Digital</string>
+    <string name="home">Beranda</string>
+    <string name="surah">Surah</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="search_hint">Cari Surah...</string>
+    <string name="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</string>
+    <string name="bismillah_translation">Dengan nama Allah Yang Maha Pengasih, Maha Penyayang</string>
+</resources>

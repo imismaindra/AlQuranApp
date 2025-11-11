@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="Beranda"/>
+
+    <item
+        android:id="@+id/nav_surah"
+        android:icon="@drawable/ic_quran"
+        android:title="Surah"/>
+
+    <item
+        android:id="@+id/nav_bookmark"
+        android:icon="@drawable/ic_bookmark_border"
+        android:title="Bookmark"/>
+</menu>

@@ -1,0 +1,196 @@
+package com.ismaindra.alquranapp.ui.surah
+
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.ismaindra.alquranapp.data.api.RetrofitClient
+import com.ismaindra.alquranapp.data.model.Surah
+import com.ismaindra.alquranapp.databinding.FragmentSurahListBinding
+import com.ismaindra.alquranapp.ui.detail.SurahDetailActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+class SurahListFragment: Fragment() {
+    private var _binding: FragmentSurahListBinding? = null
+    private val binding get() = _binding!!
+
+    private lateinit var surahAdapter: SurahAdapter
+    private var surahList = listOf<Surah>()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSurahListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        binding.rvSurah.bringToFront()
+        binding.rvSurah.viewTreeObserver.addOnGlobalLayoutListener {
+            if (_binding != null) {
+                Log.d("RV_SIZE", "width=${binding.rvSurah.width}, height=${binding.rvSurah.height}")
+            }
+        }
+
+
+        setupSearch()
+        loadSurahList()
+
+        binding.btnRetry.setOnClickListener {
+            loadSurahList()
+        }
+    }
+
+    private fun setupRecyclerView() {
+        surahAdapter = SurahAdapter { surah ->
+            openSurahDetail(surah)
+        }
+
+        binding.rvSurah.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = surahAdapter
+            setHasFixedSize(true)
+        }
+
+        Log.d("SurahListFragment", "✅ RecyclerView setup complete")
+    }
+
+    private fun setupSearch() {
+        binding.searchEditText.addTextChangedListener { text ->
+            val query = text.toString().lowercase()
+            val filteredList = surahList.filter { surah ->
+                surah.namaLatin.lowercase().contains(query) ||
+                        surah.nama.lowercase().contains(query) ||
+                        surah.nomor.toString().contains(query) ||
+                        surah.tempat_turun.lowercase().contains(query)
+            }
+
+            surahAdapter.submitList(filteredList)
+
+            if (filteredList.isEmpty() && query.isNotEmpty()) {
+                binding.emptyState.visibility = View.VISIBLE
+                binding.rvSurah.visibility = View.GONE
+            } else {
+                binding.emptyState.visibility = View.GONE
+                binding.rvSurah.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun loadSurahList() {
+        showLoading(true)
+        showError(false)
+
+        lifecycleScope.launch {
+            try {
+                Log.d("SurahListFragment", "🔄 Starting API call...")
+
+                val response = withContext(Dispatchers.IO) {
+                    RetrofitClient.apiService.getAllSurah()
+                }
+
+                Log.d("SurahListFragment", "📡 Response received")
+                Log.d("SurahListFragment", "📊 Response code: ${response.code()}")
+                Log.d("SurahListFragment", "✅ Response successful: ${response.isSuccessful}")
+                Log.d("SurahListFragment", "📦 Body not null: ${response.body() != null}")
+
+                if (response.isSuccessful && response.body() != null) {
+                    surahList = response.body()!!
+
+                    Log.d("SurahListFragment", "📚 Surah list size: ${surahList.size}")
+
+                    if (surahList.isNotEmpty()) {
+                        val firstSurah = surahList.first()
+                        Log.d("SurahListFragment", "📖 First surah: nomor=${firstSurah.nomor}, nama=${firstSurah.nama}, namaLatin=${firstSurah.namaLatin}")
+
+                        // Submit list
+                        surahAdapter.submitList(surahList)
+
+                        // Pastikan RecyclerView terlihat
+                        binding.rvSurah.visibility = View.VISIBLE
+                        binding.emptyState.visibility = View.GONE
+
+                        showLoading(false)
+                        showError(false)
+
+                        Log.d("SurahListFragment", "✅ Data submitted to adapter successfully")
+                        Log.d("SurahListFragment", "👁️ RecyclerView visibility: ${binding.rvSurah.visibility}")
+                        Log.d("SurahListFragment", "📊 Adapter item count: ${surahAdapter.itemCount}")
+                    } else {
+                        showLoading(false)
+                        showError(true, "Data surah kosong")
+                        Log.e("SurahListFragment", "❌ Surah list is empty")
+                    }
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    showLoading(false)
+                    showError(true, "Gagal memuat data: ${response.code()}")
+                    Log.e("SurahListFragment", "❌ Response error: ${response.code()}")
+                    Log.e("SurahListFragment", "Error body: $errorBody")
+                }
+
+            } catch (e: Exception) {
+                Log.e("SurahListFragment", "❌ Exception occurred", e)
+                showLoading(false)
+                showError(true, "Periksa koneksi internet: ${e.localizedMessage}")
+            }
+        }
+        Log.d("UI_CHECK", "rv=${binding.rvSurah.visibility}, progress=${binding.progressBar.visibility}, empty=${binding.emptyState.visibility}, error=${binding.errorState.visibility}")
+
+    }
+
+    private fun openSurahDetail(surah: Surah) {
+        val intent = Intent(requireContext(), SurahDetailActivity::class.java).apply {
+            putExtra(SurahDetailActivity.EXTRA_SURAH_NUMBER, surah.nomor)
+            putExtra(SurahDetailActivity.EXTRA_SURAH_NAME, surah.namaLatin)
+            putExtra(SurahDetailActivity.EXTRA_SURAH_REVELATION, surah.tempat_turun)
+            putExtra(SurahDetailActivity.EXTRA_AYAH_COUNT, surah.jumlah_ayat)
+        }
+        startActivity(intent)
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        Log.d("SurahListFragment", "⏳ showLoading: $isLoading")
+
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+
+        // Jangan sembunyikan RecyclerView saat loading selesai
+        if (isLoading) {
+            binding.rvSurah.visibility = View.GONE
+        } else {
+            binding.rvSurah.visibility = View.VISIBLE
+        }
+
+        binding.errorState.visibility = View.GONE
+        binding.emptyState.visibility = View.GONE
+    }
+
+
+    private fun showError(isError: Boolean, message: String = "") {
+        Log.d("SurahListFragment", "❌ showError: $isError, message: $message")
+        binding.errorState.visibility = if (isError) View.VISIBLE else View.GONE
+        binding.rvSurah.visibility = if (isError) View.GONE else View.VISIBLE
+
+        if (isError && message.isNotEmpty()) {
+            binding.tvError.text = message
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
