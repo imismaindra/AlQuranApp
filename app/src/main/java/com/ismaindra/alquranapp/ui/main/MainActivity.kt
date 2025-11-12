@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_bookmark -> {
-                    // Navigate to bookmark fragment
-                    // navController.navigate(R.id.bookmarkFragment)
+//                     Navigate to bookmark fragment
+                     navController.navigate(R.id.bookmarkFragment)
                     true
                 }
                 else -> false

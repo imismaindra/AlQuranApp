@@ -46,7 +46,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Container untuk nama & info -->
         <LinearLayout
             android:id="@+id/llInfo"
             android:layout_width="0dp"

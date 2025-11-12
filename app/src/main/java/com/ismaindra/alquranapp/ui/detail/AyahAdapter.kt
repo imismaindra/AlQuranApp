@@ -3,32 +3,86 @@ package com.ismaindra.alquranapp.ui.detail
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Typeface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
+import com.ismaindra.alquranapp.R
 import com.ismaindra.alquranapp.data.model.Ayat
 import com.ismaindra.alquranapp.data.model.BookmarkItem
 import com.ismaindra.alquranapp.databinding.ItemAyahBinding
 import com.ismaindra.alquranapp.utils.BookmarkManager
 
-class AyahAdapter : ListAdapter<Ayat, AyahAdapter.AyahViewHolder>(AyahDiffCallback()) {
+class AyahAdapter(
+    private val showBismillah: Boolean = true
+) : ListAdapter<Ayat, RecyclerView.ViewHolder>(AyahDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AyahViewHolder {
-        val binding = ItemAyahBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return AyahViewHolder(binding)
+    companion object {
+        private const val VIEW_TYPE_BISMILLAH = 0
+        private const val VIEW_TYPE_AYAH = 1
     }
 
-    override fun onBindViewHolder(holder: AyahViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun getItemViewType(position: Int): Int {
+        return if (showBismillah && position == 0) VIEW_TYPE_BISMILLAH else VIEW_TYPE_AYAH
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        return if (viewType == VIEW_TYPE_BISMILLAH) {
+            // Buat card Bismillah
+            val context = parent.context
+            val cardView = MaterialCardView(context).apply {
+                val params = ViewGroup.MarginLayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                params.setMargins(32, 32, 32, 16)
+                layoutParams = params
+                radius = 24f
+                cardElevation = 4f
+
+                val textView = TextView(context).apply {
+                    text = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
+                    textSize = 28f
+                    setTextColor(ContextCompat.getColor(context, R.color.arabic_text))
+                    setBackgroundColor(ContextCompat.getColor(context, R.color.background_white))
+                    typeface = Typeface.SERIF
+                    textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                    setPadding(24, 24, 24, 24)
+                }
+                addView(textView)
+            }
+            BismillahViewHolder(cardView)
+        } else {
+            val binding = ItemAyahBinding.inflate(inflater, parent, false)
+            AyahViewHolder(binding)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (getItemViewType(position) == VIEW_TYPE_AYAH) {
+            val actualPosition = if (showBismillah) position - 1 else position
+            val ayat = getItem(actualPosition)
+            (holder as AyahViewHolder).bind(ayat)
+        }
+        // VIEW_TYPE_BISMILLAH tidak perlu di-bind apa pun karena teks-nya statis
+    }
+
+    override fun getItemCount(): Int {
+        return super.getItemCount() + if (showBismillah) 1 else 0
+    }
+
+    // --- ViewHolder Bismillah (hanya tampilan teks Arab) ---
+    class BismillahViewHolder(view: View) : RecyclerView.ViewHolder(view)
+
+    // --- ViewHolder untuk Ayat ---
     inner class AyahViewHolder(
         private val binding: ItemAyahBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -37,32 +91,20 @@ class AyahAdapter : ListAdapter<Ayat, AyahAdapter.AyahViewHolder>(AyahDiffCallba
 
         fun bind(ayat: Ayat) {
             binding.apply {
-                // Gunakan property yang sesuai dengan model Ayat Anda
                 tvAyahNumber.text = ayat.nomor?.toString() ?: "0"
                 tvArabic.text = ayat.arabic ?: ""
                 tvTranslation.text = ayat.terjemahan ?: ""
 
-                // Copy button click
-                btnCopy.setOnClickListener {
-                    copyToClipboard(ayat)
-                }
-
-                // Play audio button - Note: model Ayat tidak punya audio
+                btnCopy.setOnClickListener { copyToClipboard(ayat) }
                 btnPlay.setOnClickListener {
-                    // playAudio() // Uncomment jika Anda tambah audio di model
                     Toast.makeText(context, "Fitur audio akan segera hadir", Toast.LENGTH_SHORT).show()
                 }
-
-                // Bookmark button
-                btnBookmark.setOnClickListener {
-                    bookmarkAyah(ayat)
-                }
+                btnBookmark.setOnClickListener { bookmarkAyah(ayat) }
             }
         }
+
         private fun bookmarkAyah(ayat: Ayat) {
             val bookmarkManager = BookmarkManager(context)
-
-            // Get surah info dari activity
             val activity = context as? SurahDetailActivity
             val surahNumber = activity?.intent?.getIntExtra(SurahDetailActivity.EXTRA_SURAH_NUMBER, 0) ?: 0
             val surahName = activity?.intent?.getStringExtra(SurahDetailActivity.EXTRA_SURAH_NAME) ?: ""
@@ -91,20 +133,15 @@ class AyahAdapter : ListAdapter<Ayat, AyahAdapter.AyahViewHolder>(AyahDiffCallba
                 "${ayat.arabic}\n\n${ayat.terjemahan}"
             )
             clipboard.setPrimaryClip(clip)
-
             Toast.makeText(context, "Ayat disalin", Toast.LENGTH_SHORT).show()
         }
-
-
     }
 
     class AyahDiffCallback : DiffUtil.ItemCallback<Ayat>() {
-        override fun areItemsTheSame(oldItem: Ayat, newItem: Ayat): Boolean {
-            return oldItem.nomor == newItem.nomor
-        }
+        override fun areItemsTheSame(oldItem: Ayat, newItem: Ayat): Boolean =
+            oldItem.nomor == newItem.nomor
 
-        override fun areContentsTheSame(oldItem: Ayat, newItem: Ayat): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: Ayat, newItem: Ayat): Boolean =
+            oldItem == newItem
     }
 }

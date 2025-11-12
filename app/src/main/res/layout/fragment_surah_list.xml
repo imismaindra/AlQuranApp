@@ -14,6 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        app:cardBackgroundColor="@color/cardview_light_background"
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cari Surah..."
+            app:placeholderTextColor="@color/arabic_text"
             app:startIconDrawable="@android:drawable/ic_menu_search"
             app:startIconTint="@color/primary_green"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -34,6 +36,8 @@
                 android:id="@+id/searchEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:placeholderTextColor="@color/arabic_text"
+                android:textColor="@color/arabic_text"
                 android:inputType="text"
                 android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>

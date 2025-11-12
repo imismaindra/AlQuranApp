@@ -43,7 +43,7 @@ class SurahAdapter(
                 tvNumber.text = surah.nomor.toString()
                 tvName.text = surah.namaLatin
                 tvArabicName.text = surah.nama
-                tvRevelation.text = surah.arti
+                tvRevelation.text = surah.tempat_turun
                 tvAyahs.text = "${surah.jumlah_ayat} Ayat"
 
                 root.setOnClickListener {

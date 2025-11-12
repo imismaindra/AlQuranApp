@@ -109,26 +109,6 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Bismillah Card -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardBismillah"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"
-            android:textSize="28sp"
-            android:textColor="@color/arabic_text"
-            android:fontFamily="serif"
-            android:textAlignment="center"
-            android:padding="24dp"/>
-    </com.google.android.material.card.MaterialCardView>
 
     <!-- RecyclerView langsung -->
     <androidx.recyclerview.widget.RecyclerView
@@ -140,6 +120,25 @@
         android:paddingBottom="16dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/item_ayah"/>
+<!--    <com.google.android.material.card.MaterialCardView-->
+<!--        android:id="@+id/cardBismillah"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="16dp"-->
+<!--        app:cardCornerRadius="12dp"-->
+<!--        app:cardElevation="2dp"-->
+<!--        android:visibility="gone">-->
+
+<!--        <TextView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ"-->
+<!--            android:textSize="28sp"-->
+<!--            android:textColor="@color/arabic_text"-->
+<!--            android:fontFamily="serif"-->
+<!--            android:textAlignment="center"-->
+<!--            android:padding="24dp"/>-->
+<!--    </com.google.android.material.card.MaterialCardView>-->
 
     <!-- Loading -->
     <com.google.android.material.progressindicator.CircularProgressIndicator

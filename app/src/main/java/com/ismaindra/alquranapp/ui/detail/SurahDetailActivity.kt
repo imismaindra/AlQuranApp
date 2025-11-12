@@ -54,12 +54,11 @@ class SurahDetailActivity : AppCompatActivity() {
             // Set collapsing toolbar title
             collapsingToolbar.title = surahName
 
-            // Show bismillah card except for surah 1 and 9
-            cardBismillah.visibility = if (surahNumber != 1 && surahNumber != 9) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+//            cardBismillah.visibility = if (surahNumber != 1 && surahNumber != 9) {
+//                View.VISIBLE
+//            } else {
+//                View.GONE
+//            }
         }
     }
 
@@ -76,7 +75,8 @@ class SurahDetailActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        ayahAdapter = AyahAdapter()
+        val showBismillah = surahNumber != 1 && surahNumber!= 9
+        ayahAdapter = AyahAdapter(showBismillah=showBismillah)
 
         binding.rvAyah.apply {
             layoutManager = LinearLayoutManager(this@SurahDetailActivity)
@@ -104,10 +104,11 @@ class SurahDetailActivity : AppCompatActivity() {
                         tvAyahCount.text = "${surahDetail.jumlahAyat} Ayat"
                         collapsingToolbar.title = surahDetail.namaLatin
                     }
-
-                    // Submit list ayat ke adapter
                     ayahAdapter.submitList(surahDetail.ayat)
+                    binding.rvAyah.scrollToPosition(0)
+
                     showLoading(false)
+
                 } else {
                     showLoading(false)
                     showError("Gagal memuat ayat: ${response.message()}")
