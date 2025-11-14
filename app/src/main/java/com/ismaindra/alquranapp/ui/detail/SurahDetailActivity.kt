@@ -1,11 +1,17 @@
 package com.ismaindra.alquranapp.ui.detail
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ismaindra.alquranapp.data.api.RetrofitClient
+import android.content.ContentValues.TAG
 import com.ismaindra.alquranapp.data.model.Ayat
 import com.ismaindra.alquranapp.databinding.ActivitySurahDetailBinding
 import com.google.android.material.snackbar.Snackbar
@@ -18,6 +24,7 @@ class SurahDetailActivity : AppCompatActivity() {
 
     private var surahNumber: Int = 0
     private var surahName: String = ""
+    private var audioUrl:String = ""
 
     companion object {
         const val EXTRA_SURAH_NUMBER = "extra_surah_number"
@@ -35,6 +42,7 @@ class SurahDetailActivity : AppCompatActivity() {
         getIntentData()
         setupToolbar()
         setupRecyclerView()
+        setupAudioButton()
         loadSurahDetail()
     }
 
@@ -84,6 +92,16 @@ class SurahDetailActivity : AppCompatActivity() {
             setHasFixedSize(false)
         }
     }
+    private fun setupAudioButton(){
+        binding.fabPlayAudio.setOnClickListener {
+            if (audioUrl.isNotEmpty()) {
+                playAudio(audioUrl)
+            } else {
+                Toast.makeText(this, "Audio belum tersedia", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     private fun loadSurahDetail() {
         showLoading(true)
@@ -95,6 +113,10 @@ class SurahDetailActivity : AppCompatActivity() {
                 // ✅ PERBAIKAN: Gunakan body() dengan ()
                 if (response.isSuccessful && response.body() != null) {
                     val surahDetail = response.body()!!
+                    // ✅ Simpan audio URL
+                    audioUrl = surahDetail.audio
+                    Log.d(TAG, "Audio URL loaded: $audioUrl")
+
 
                     // Update UI dengan info dari response (opsional)
                     binding.apply {
@@ -108,6 +130,8 @@ class SurahDetailActivity : AppCompatActivity() {
                     binding.rvAyah.scrollToPosition(0)
 
                     showLoading(false)
+                    // ✅ Show toast bahwa audio sudah siap
+                    Toast.makeText(this@SurahDetailActivity, "Audio siap diputar", Toast.LENGTH_SHORT).show()
 
                 } else {
                     showLoading(false)
@@ -121,6 +145,36 @@ class SurahDetailActivity : AppCompatActivity() {
             }
         }
     }
+    private fun playAudio(audioUrl: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(Uri.parse(audioUrl), "audio/*")
+            }
+
+            // Cek apakah ada aplikasi yang bisa handle intent ini
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                // Jika tidak ada, buka di browser
+                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(audioUrl))
+                startActivity(browserIntent)
+            }
+
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(
+                this,
+                "Tidak ada aplikasi untuk memutar audio",
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                "Gagal memutar audio: ${e.localizedMessage}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

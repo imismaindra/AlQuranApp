@@ -14,17 +14,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
-        setupToolbar()
+//        setupToolbar()
         setupNavigation()
     }
 
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.apply {
-            title = "Al-Quran Digital"
-        }
-    }
+//    private fun setupToolbar() {
+//        setSupportActionBar(binding.toolbar)
+//        supportActionBar?.apply {
+//            title = "Al-Quran Digital"
+//        }
+//    }
 
     private fun setupNavigation() {
         val navHostFragment = supportFragmentManager
