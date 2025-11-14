@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme (Dark Mode). -->
-    <style name="Theme.AlQuranApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/primary_green_light</item>
-        <item name="colorPrimaryVariant">@color/primary_green</item>
-        <item name="colorOnPrimary">@color/black</item>
+<!--    &lt;!&ndash; Base application theme (Dark Mode). &ndash;&gt;-->
+<!--    <style name="Theme.AlQuranApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
+<!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/primary_green_light</item>-->
+<!--        <item name="colorPrimaryVariant">@color/primary_green</item>-->
+<!--        <item name="colorOnPrimary">@color/black</item>-->
 
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/accent_gold</item>
-        <item name="colorSecondaryVariant">@color/accent_gold</item>
-        <item name="colorOnSecondary">@color/black</item>
+<!--        &lt;!&ndash; Secondary brand color. &ndash;&gt;-->
+<!--        <item name="colorSecondary">@color/accent_gold</item>-->
+<!--        <item name="colorSecondaryVariant">@color/accent_gold</item>-->
+<!--        <item name="colorOnSecondary">@color/black</item>-->
 
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/black</item>
+<!--        &lt;!&ndash; Status bar color. &ndash;&gt;-->
+<!--        <item name="android:statusBarColor">@color/black</item>-->
 
-        <!-- Background color -->
-        <item name="android:windowBackground">@color/black</item>
-        <item name="backgroundColor">@color/black</item>
+<!--        &lt;!&ndash; Background color &ndash;&gt;-->
+<!--        <item name="android:windowBackground">@color/black</item>-->
+<!--        <item name="backgroundColor">@color/black</item>-->
 
-        <!-- Customize your theme here. -->
-        <item name="android:navigationBarColor">@color/black</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-    </style>
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="android:navigationBarColor">@color/black</item>-->
+<!--        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>-->
+<!--    </style>-->
 
-    <!-- Theme tanpa ActionBar (Dark) -->
-    <style name="Theme.AlQuranApp.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+<!--    &lt;!&ndash; Theme tanpa ActionBar (Dark) &ndash;&gt;-->
+<!--    <style name="Theme.AlQuranApp.NoActionBar">-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--    </style>-->
 </resources>

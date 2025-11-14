@@ -10,18 +10,26 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Primary Colors - Islamic Green Theme -->
-    <color name="primary_green">#2E7D32</color>
-    <color name="primary_green_dark">#1B5E20</color>
+    <color name="primary_green">#4CAF50</color>
+<!--    <color name="primary_green_dark">#1B5E20</color>-->
+    <color name="primary_green_dark">#4CAF50</color>
     <color name="primary_green_light">#4CAF50</color>
 
+    <color name="primary_yellow">#FFC107</color>
+    <color name="primary_red">#FF5252</color>
+
+    <color name="cardview_light_background">#FFFFFF</color>
+
+    <color name="chip_selected">#4CAF50</color>
+    <color name="chip_unselected">#F5F5F5</color>
     <!-- Accent Colors - Gold -->
     <color name="accent_gold">#FFD700</color>
     <color name="accent_gold_dark">#FFC107</color>
 
     <!-- Background Colors -->
     <color name="background_cream">#FFF8E1</color>
-    <color name="background_white">#FFFFFF</color>
     <color name="background_light">#F5F5F5</color>
+    <color name="background_white">#FFFFFF</color>
 
     <!-- Text Colors -->
     <color name="text_primary">#212121</color>
