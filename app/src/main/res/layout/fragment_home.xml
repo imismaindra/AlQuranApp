@@ -27,21 +27,6 @@
                 android:padding="20dp"
                 android:paddingBottom="24dp">
 
-                <!-- Status Bar Space -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp" />
-
-                <!-- Time -->
-                <TextView
-                    android:id="@+id/tv_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="15:00"
-                    android:textColor="@color/text_white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
                 <!-- Greeting -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -68,7 +53,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Yogyakarta, 29 Oktober 2020"
+                            android:text="Surabaya, 20 Oktober 2025"
                             android:textColor="@color/text_white"
                             android:textSize="12sp"
                             android:alpha="0.9" />
@@ -131,9 +116,9 @@
 
                         <!-- Kaaba Icon -->
                         <ImageView
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
-                            android:src="@drawable/ic_kaaba"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:src="@drawable/ic_kabah"
                             android:background="@drawable/circle_white_bg"
                             android:padding="12dp" />
 
@@ -174,7 +159,7 @@
                     <ImageView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/ic_quran"
+                        android:src="@drawable/ic_al_quran"
                         android:background="@drawable/circle_yellow_bg"
                         android:padding="12dp"
                         app:tint="@color/primary_yellow" />
@@ -199,9 +184,9 @@
                     android:padding="8dp">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_doa"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:src="@drawable/ic_berdoa"
                         android:background="@drawable/circle_yellow_bg"
                         android:padding="12dp"
                         app:tint="@color/primary_yellow" />
@@ -216,7 +201,7 @@
 
                 </LinearLayout>
 
-                <!-- Kitab Kuning -->
+                <!-- Jadwal sholat -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -226,9 +211,9 @@
                     android:padding="8dp">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_book"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:src="@drawable/ic_shalat"
                         android:background="@drawable/circle_yellow_bg"
                         android:padding="12dp"
                         app:tint="@color/primary_yellow" />
@@ -236,7 +221,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Kitab Kuning"
+                        android:text="Jadwal Sholat"
                         android:textSize="12sp"
                         android:textColor="@color/text_primary"
                         android:textAlignment="center"
@@ -256,7 +241,7 @@
                     <ImageView
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/ic_shalawat"
+                        android:src="@drawable/ic_star"
                         android:background="@drawable/circle_yellow_bg"
                         android:padding="12dp"
                         app:tint="@color/primary_yellow" />
