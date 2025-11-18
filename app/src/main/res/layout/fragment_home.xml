@@ -12,16 +12,11 @@
         android:orientation="vertical">
 
         <!-- Header Card with Gradient -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background_light"
-            app:cardCornerRadius="0dp"
-            app:cardElevation="0dp">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/card_gradient"
                 android:orientation="vertical"
                 android:padding="20dp"
@@ -53,10 +48,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
+                            android:alpha="0.9"
                             android:text="Surabaya, 20 Oktober 2025"
                             android:textColor="@color/text_white"
-                            android:textSize="12sp"
-                            android:alpha="0.9" />
+                            android:textSize="12sp" />
 
                     </LinearLayout>
 
@@ -64,8 +59,8 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/ic_notifications"
                         android:padding="8dp"
+                        android:src="@drawable/ic_notifications"
                         app:tint="@color/text_white" />
 
                 </LinearLayout>
@@ -75,16 +70,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    app:cardCornerRadius="16dp"
                     app:cardBackgroundColor="#80FFFFFF"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="center_vertical">
+                        android:padding="16dp">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -106,11 +101,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
+                                android:drawableStart="@drawable/ic_access_time"
+                                android:drawablePadding="4dp"
                                 android:text="2:30:10 Menjelang Azan"
                                 android:textColor="@color/text_white"
-                                android:textSize="12sp"
-                                android:drawableStart="@drawable/ic_access_time"
-                                android:drawablePadding="4dp" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -118,9 +113,9 @@
                         <ImageView
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:src="@drawable/ic_kabah"
                             android:background="@drawable/circle_white_bg"
-                            android:padding="12dp" />
+                            android:padding="12dp"
+                            android:src="@drawable/ic_kabah" />
 
                     </LinearLayout>
 
@@ -128,14 +123,14 @@
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+
 
         <!-- Main Content with White Background -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/background_white"
+            android:background="@color/background_light"
             android:paddingTop="20dp">
 
             <!-- Quick Menu Icons -->

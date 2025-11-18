@@ -30,6 +30,8 @@
     <color name="background_cream">#FFF8E1</color>
     <color name="background_light">#F5F5F5</color>
     <color name="background_white">#FFFFFF</color>
+    <color name="bg_test">#FF5252</color>
+
 
     <!-- Text Colors -->
     <color name="text_primary">#212121</color>
