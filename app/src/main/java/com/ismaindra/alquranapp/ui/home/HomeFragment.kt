@@ -25,9 +25,12 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
     private lateinit var fusedLocation: FusedLocationProviderClient
     private val scope = CoroutineScope(Dispatchers.Main)
+    private var countdownJob: Job? = null
+    private var nextName: String? = null
+    private var nextTimeMillis: Long? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +45,11 @@ class HomeFragment : Fragment() {
         fusedLocation = LocationServices.getFusedLocationProviderClient(requireContext())
         checkGPS()
     }
+    override fun onPause() {
+        super.onPause()
+        countdownJob?.cancel()
+    }
+
 
     // ---------------------------------------------------
     // CEK GPS ON
@@ -96,10 +104,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
-    // ---------------------------------------------------
-    // AMBIL KOTA → lalu fetch ID → fetch jadwal
-    // ---------------------------------------------------
     private fun getAddressInfo(lat: Double, lon: Double) {
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
 
@@ -114,20 +118,12 @@ class HomeFragment : Fragment() {
                     fetchJadwal(id) { jadwal ->
                         if (jadwal != null) {
 
-//                            binding.tvSubuh.text = jadwal.getString("subuh")
-//                            binding.tvDzuhur.text = jadwal.getString("dzuhur")
-//                            binding.tvAshar.text = jadwal.getString("ashar")
-//                            binding.tvMaghrib.text = jadwal.getString("maghrib")
-//                            binding.tvIsya.text = jadwal.getString("isya")
-
                             val next = getNextSholat(jadwal)
 
                             if (next != null) {
-                                val name = next.first
-                                val diff = next.second
-
-                                val hours = diff / (1000 * 60 * 60)
-                                val minutes = (diff / (1000 * 60)) % 60
+                                nextName = next.first
+                                nextTimeMillis = System.currentTimeMillis() + next.second
+                                startCountdown()
 
                                 val namesMap = mapOf(
                                     "subuh" to "Subuh",
@@ -137,24 +133,63 @@ class HomeFragment : Fragment() {
                                     "isya" to "Isya"
                                 )
 
-                                val displayName = namesMap[name] ?: name.replaceFirstChar { it.uppercase() }
+                                val displayName =
+                                    namesMap[nextName] ?: nextName?.replaceFirstChar { it.uppercase() }
 
-                                binding.tvPrayerName.text = "$displayName ${jadwal.getString(name)} WIB"
-                                binding.tvPrayerCountdown.text = "$hours jam $minutes menit lagi"
+                                binding.tvPrayerName.text =
+                                    "$displayName ${jadwal.getString(nextName)} WIB"
                             }
                         }
                     }
-
                 }
             }
         }
 
         if (Build.VERSION.SDK_INT >= 33) {
-            geocoder.getFromLocation(lat, lon, 1) { list -> handler(list) }
+            // Android 13+ sudah async
+            geocoder.getFromLocation(lat, lon, 1) { handler(it) }
         } else {
-            handler(geocoder.getFromLocation(lat, lon, 1))
+            // Android 12 ke bawah → WAJIB async
+            scope.launch(Dispatchers.IO) {
+                val list = try {
+                    geocoder.getFromLocation(lat, lon, 1)
+                } catch (_: Exception) {
+                    null
+                }
+
+                withContext(Dispatchers.Main) {
+                    handler(list)
+                }
+            }
         }
     }
+
+
+    private fun startCountdown() {
+        countdownJob?.cancel()
+
+        countdownJob = scope.launch {
+            while (isActive) {
+                if (nextName != null && nextTimeMillis != null) {
+                    val remaining = nextTimeMillis!! - System.currentTimeMillis()
+
+                    if (remaining <= 0) {
+                        binding.tvPrayerCountdown.text = "Sebentar lagi"
+                        break
+                    }
+
+                    val hours = remaining / (1000 * 60 * 60)
+                    val minutes = (remaining / (1000 * 60)) % 60
+                    val seconds = (remaining / 1000) % 60
+
+                    binding.tvPrayerCountdown.text =
+                        String.format("%02d:%02d:%02d Menjelang Azan", hours, minutes, seconds)
+                }
+                delay(1000)
+            }
+        }
+    }
+
 
     // ---------------------------------------------------
     // NORMALISASI KOTA (Sukolilo → Surabaya)

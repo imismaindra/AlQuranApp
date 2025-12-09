@@ -72,14 +72,12 @@ class AyahAdapter(
             val ayat = getItem(actualPosition)
             (holder as AyahViewHolder).bind(ayat)
         }
-        // VIEW_TYPE_BISMILLAH tidak perlu di-bind apa pun karena teks-nya statis
     }
 
     override fun getItemCount(): Int {
         return super.getItemCount() + if (showBismillah) 1 else 0
     }
 
-    // --- ViewHolder Bismillah (hanya tampilan teks Arab) ---
     class BismillahViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     // --- ViewHolder untuk Ayat ---

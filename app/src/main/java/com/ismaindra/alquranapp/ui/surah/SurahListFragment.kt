@@ -73,9 +73,9 @@ class SurahListFragment: Fragment() {
             val query = text.toString().lowercase()
             val filteredList = surahList.filter { surah ->
                 surah.namaLatin.lowercase().contains(query) ||
-                        surah.nama.lowercase().contains(query) ||
+                        surah.namaLatin.lowercase().contains(query) ||
                         surah.nomor.toString().contains(query) ||
-                        surah.tempat_turun.lowercase().contains(query)
+                        surah.tempatTurun.lowercase().contains(query)
             }
 
             surahAdapter.submitList(filteredList)
@@ -101,46 +101,11 @@ class SurahListFragment: Fragment() {
                 val response = withContext(Dispatchers.IO) {
                     RetrofitClient.apiService.getAllSurah()
                 }
-
-                Log.d("SurahListFragment", "📡 Response received")
-                Log.d("SurahListFragment", "📊 Response code: ${response.code()}")
-                Log.d("SurahListFragment", "✅ Response successful: ${response.isSuccessful}")
-                Log.d("SurahListFragment", "📦 Body not null: ${response.body() != null}")
-
-                if (response.isSuccessful && response.body() != null) {
-                    surahList = response.body()!!
-
-                    Log.d("SurahListFragment", "📚 Surah list size: ${surahList.size}")
-
-                    if (surahList.isNotEmpty()) {
-                        val firstSurah = surahList.first()
-                        Log.d("SurahListFragment", "📖 First surah: nomor=${firstSurah.nomor}, nama=${firstSurah.nama}, namaLatin=${firstSurah.namaLatin}")
-
-                        // Submit list
-                        surahAdapter.submitList(surahList)
-
-                        // Pastikan RecyclerView terlihat
-                        binding.rvSurah.visibility = View.VISIBLE
-                        binding.emptyState.visibility = View.GONE
-
-                        showLoading(false)
-                        showError(false)
-
-                        Log.d("SurahListFragment", "✅ Data submitted to adapter successfully")
-                        Log.d("SurahListFragment", "👁️ RecyclerView visibility: ${binding.rvSurah.visibility}")
-                        Log.d("SurahListFragment", "📊 Adapter item count: ${surahAdapter.itemCount}")
-                    } else {
-                        showLoading(false)
-                        showError(true, "Data surah kosong")
-                        Log.e("SurahListFragment", "❌ Surah list is empty")
-                    }
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    showLoading(false)
-                    showError(true, "Gagal memuat data: ${response.code()}")
-                    Log.e("SurahListFragment", "❌ Response error: ${response.code()}")
-                    Log.e("SurahListFragment", "Error body: $errorBody")
-                }
+                surahList = response.data
+                surahAdapter.submitList(surahList)
+                binding.rvSurah.visibility = View.VISIBLE
+                binding.emptyState.visibility = View.GONE
+                showLoading(false)
 
             } catch (e: Exception) {
                 Log.e("SurahListFragment", "❌ Exception occurred", e)
@@ -156,8 +121,8 @@ class SurahListFragment: Fragment() {
         val intent = Intent(requireContext(), SurahDetailActivity::class.java).apply {
             putExtra(SurahDetailActivity.EXTRA_SURAH_NUMBER, surah.nomor)
             putExtra(SurahDetailActivity.EXTRA_SURAH_NAME, surah.namaLatin)
-            putExtra(SurahDetailActivity.EXTRA_SURAH_REVELATION, surah.tempat_turun)
-            putExtra(SurahDetailActivity.EXTRA_AYAH_COUNT, surah.jumlah_ayat)
+            putExtra(SurahDetailActivity.EXTRA_SURAH_REVELATION, surah.tempatTurun)
+            putExtra(SurahDetailActivity.EXTRA_AYAH_COUNT, surah.jumlahAyat)
         }
         startActivity(intent)
     }

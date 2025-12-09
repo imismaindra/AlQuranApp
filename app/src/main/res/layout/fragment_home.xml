@@ -103,7 +103,7 @@
                                 android:layout_marginTop="4dp"
                                 android:drawableStart="@drawable/ic_access_time"
                                 android:drawablePadding="4dp"
-                                android:text="2:30:10 Menjelang Azan"
+                                android:text="00:00:00 Menjelang Azan"
                                 android:textColor="@color/text_white"
                                 android:textSize="12sp" />
 
@@ -224,7 +224,7 @@
 
                 </LinearLayout>
 
-                <!-- Shalawat -->
+                <!-- Hadist -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -244,7 +244,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Shalawat"
+                        android:text="Hadist"
                         android:textSize="12sp"
                         android:textColor="@color/text_primary"
                         android:layout_marginTop="8dp" />

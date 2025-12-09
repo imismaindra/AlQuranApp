@@ -109,16 +109,12 @@ class SurahDetailActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.getSurahDetail(surahNumber)
-
-                // ✅ PERBAIKAN: Gunakan body() dengan ()
                 if (response.isSuccessful && response.body() != null) {
                     val surahDetail = response.body()!!
-                    // ✅ Simpan audio URL
+                    // Simpan audio URL
                     audioUrl = surahDetail.audio
                     Log.d(TAG, "Audio URL loaded: $audioUrl")
 
-
-                    // Update UI dengan info dari response (opsional)
                     binding.apply {
                         tvSurahName.text = surahDetail.namaLatin
                         tvSurahNameArabic.text = surahDetail.nama
@@ -130,7 +126,6 @@ class SurahDetailActivity : AppCompatActivity() {
                     binding.rvAyah.scrollToPosition(0)
 
                     showLoading(false)
-                    // ✅ Show toast bahwa audio sudah siap
                     Toast.makeText(this@SurahDetailActivity, "Audio siap diputar", Toast.LENGTH_SHORT).show()
 
                 } else {

@@ -42,9 +42,9 @@ class SurahAdapter(
             binding.apply {
                 tvNumber.text = surah.nomor.toString()
                 tvName.text = surah.namaLatin
-                tvArabicName.text = surah.nama
-                tvRevelation.text = surah.tempat_turun
-                tvAyahs.text = "${surah.jumlah_ayat} Ayat"
+                tvArabicName.text = surah.namaArab
+                tvRevelation.text = surah.tempatTurun
+                tvAyahs.text = "${surah.jumlahAyat} Ayat"
 
                 root.setOnClickListener {
                     Log.d("SurahAdapter", "🖱️ Clicked surah: ${surah.namaLatin}")
