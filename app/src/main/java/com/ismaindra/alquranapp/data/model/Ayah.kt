@@ -3,8 +3,6 @@ package com.ismaindra.alquranapp.data.model
 import com.google.gson.annotations.SerializedName
 
 data class SurahDetailResponse(
-    @SerializedName("status")
-    val status: Boolean,
     @SerializedName("nomor")
     val nomor: Int,
     @SerializedName("nama")
@@ -24,25 +22,33 @@ data class SurahDetailResponse(
     @SerializedName("ayat")
     val ayat: List<Ayat>,
     @SerializedName("surat_selanjutnya")
-    val suratSelanjutnya: SurahInfo?, // bisa null jika false
+    val suratSelanjutnya: SurahInfo?,
     @SerializedName("surat_sebelumnya")
-    val suratSebelumnya: SurahInfo?   // bisa null jika false
+    val suratSebelumnya: Any? // karena bisa false atau object
 )
 
+
 data class Ayat(
+    @SerializedName("id")
+    val id: String?,
+    @SerializedName("ayat_id_api")
+    val ayatIdApi: Int?,
+    @SerializedName("surah")
+    val surah: Int?,
     @SerializedName("nomor")
     val nomor: Int?,
     @SerializedName("ar")
     val arabic: String?,
     @SerializedName("tr")
-    val transcipt:String?,
+    val transliterasi: String?,
     @SerializedName("idn")
     val terjemahan: String?
 )
 
+
 data class SurahInfo(
     @SerializedName("id")
-    val id: Int,
+    val id: String,
     @SerializedName("nomor")
     val nomor: Int,
     @SerializedName("nama")
@@ -60,3 +66,4 @@ data class SurahInfo(
     @SerializedName("audio")
     val audio: String
 )
+
