@@ -14,3 +14,11 @@ data class Doa(
     @SerializedName("indo")
     val indo: String
 )
+data class DoaResponse(
+    @SerializedName("status")
+    val status: Boolean,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("data")
+    val data: List<Doa>
+)
