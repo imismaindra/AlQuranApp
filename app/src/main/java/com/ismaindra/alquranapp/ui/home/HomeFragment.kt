@@ -10,12 +10,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.ismaindra.alquranapp.data.api.RetrofitClient
 import com.ismaindra.alquranapp.databinding.FragmentHomeBinding
+import com.ismaindra.alquranapp.ui.home.DoaAdapter
+import com.ismaindra.alquranapp.ui.home.HomeViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.observeOn
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -30,7 +38,10 @@ class HomeFragment : Fragment() {
     private var countdownJob: Job? = null
     private var nextName: String? = null
     private var nextTimeMillis: Long? = null
-
+    private val viewModel: HomeViewModel by lazy {
+        val apiService = RetrofitClient.apiService
+        HomeViewModel(apiService)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,18 +53,59 @@ class HomeFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         fusedLocation = LocationServices.getFusedLocationProviderClient(requireContext())
+
+        setupObservers()
         checkGPS()
+        viewModel.loadDoaAcak()
     }
+
+    private fun setupObservers() {
+        // Observe doa list
+        lifecycleScope.launch {
+            viewModel.doaList.collect { doaList ->
+                if (doaList.isNotEmpty()) {
+                    updateDoaCards(doaList)
+                }
+            }
+        }
+
+        // Observe loading state
+        lifecycleScope.launch {
+            viewModel.isLoading.collect { isLoading ->
+                // binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            }
+        }
+
+        // Observe error
+        lifecycleScope.launch {
+            viewModel.errorMessage.collect { error ->
+                error?.let {
+                    // Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun updateDoaCards(doaList: List<com.ismaindra.alquranapp.data.model.Doa>) {
+        val adapter = DoaAdapter(doaList) { doa ->
+            Toast.makeText(context, "di klik", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.rvDoaHariIni.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
+
+        binding.rvDoaHariIni.adapter = adapter
+    }
+
+
     override fun onPause() {
         super.onPause()
         countdownJob?.cancel()
     }
 
-
-    // ---------------------------------------------------
-    // CEK GPS ON
-    // ---------------------------------------------------
     private fun checkGPS() {
         val locationRequest = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY, 2000
@@ -77,9 +129,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // ---------------------------------------------------
-    // AMBIL LOKASI
-    // ---------------------------------------------------
     private fun getUserLocation() {
         val fine = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
         val coarse = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -104,6 +153,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
     private fun getAddressInfo(lat: Double, lon: Double) {
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
 
@@ -117,7 +167,6 @@ class HomeFragment : Fragment() {
                 if (id != null) {
                     fetchJadwal(id) { jadwal ->
                         if (jadwal != null) {
-
                             val next = getNextSholat(jadwal)
 
                             if (next != null) {
@@ -146,10 +195,8 @@ class HomeFragment : Fragment() {
         }
 
         if (Build.VERSION.SDK_INT >= 33) {
-            // Android 13+ sudah async
             geocoder.getFromLocation(lat, lon, 1) { handler(it) }
         } else {
-            // Android 12 ke bawah → WAJIB async
             scope.launch(Dispatchers.IO) {
                 val list = try {
                     geocoder.getFromLocation(lat, lon, 1)
@@ -163,7 +210,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-
 
     private fun startCountdown() {
         countdownJob?.cancel()
@@ -190,10 +236,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-    // ---------------------------------------------------
-    // NORMALISASI KOTA (Sukolilo → Surabaya)
-    // ---------------------------------------------------
     private fun extractCity(addr: Address): String {
         val locality = addr.locality ?: ""
         val subAdmin = addr.subAdminArea ?: ""
@@ -214,9 +256,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // ---------------------------------------------------
-    // API: cari ID kota
-    // ---------------------------------------------------
     private fun fetchCityId(city: String, callback: (String?) -> Unit) {
         scope.launch(Dispatchers.IO) {
             try {
@@ -233,9 +272,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // ---------------------------------------------------
-    // API: ambil jadwal harian
-    // ---------------------------------------------------
     private fun fetchJadwal(id: String, callback: (JSONObject?) -> Unit) {
         val today = SimpleDateFormat("yyyy-MM-dd", Locale("id", "ID")).format(Date())
 
@@ -261,7 +297,7 @@ class HomeFragment : Fragment() {
 
     private fun getNextSholat(jadwal: JSONObject): Pair<String, Long>? {
         val today = SimpleDateFormat("yyyy-MM-dd", Locale("id", "ID")).format(Date())
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale("id", "ID")) // Tambahkan HH:mm
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale("id", "ID"))
 
         val list = listOf(
             "imsak",
@@ -279,13 +315,12 @@ class HomeFragment : Fragment() {
         for (name in list) {
             try {
                 val timeString = jadwal.getString(name)
-                val date = format.parse("$today $timeString") // Format: "2025-11-18 04:30"
+                val date = format.parse("$today $timeString")
                 if (date != null && date.after(now)) {
                     val difMillis = date.time - now.time
                     return Pair(name, difMillis)
                 }
             } catch (e: Exception) {
-                // Skip jika parsing gagal
                 continue
             }
         }
