@@ -17,6 +17,7 @@ class DoaAdapter(
     inner class DoaViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val content: TextView = view.findViewById(R.id.tvDoaContent)
         val source: TextView = view.findViewById(R.id.tvDoaSource)
+        val tr: TextView = view.findViewById(R.id.tvDoaIndo)
         val image: ImageView = view.findViewById(R.id.imgBackground)
     }
 
@@ -30,6 +31,7 @@ class DoaAdapter(
         val doa = items[position]
         holder.content.text = doa.arab
         holder.source.text = doa.judul
+        holder.tr.text = doa.indo
 
         holder.view.setOnClickListener { onClick(doa) }
     }
