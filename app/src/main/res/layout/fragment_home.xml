@@ -164,6 +164,8 @@
 
                     <!-- Doa -->
                     <LinearLayout
+                        android:id="@+id/menuDoaPage"
+                        android:name="com.ismaindra.alquranapp.ui.doa.DoaListFragment"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -191,6 +193,7 @@
 
                     <!-- Jadwal sholat -->
                     <LinearLayout
+                        android:id="@+id/menuJadwalSholat"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -283,7 +286,7 @@
                     android:layout_marginTop="12dp"
                     android:overScrollMode="never"/>
 
-                <!-- Feed Untukmu Section -->
+                <!-- Hadist Untukmu Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -296,7 +299,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Feed Untukmu"
+                        android:text="Hadist Untukmu"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_primary" />

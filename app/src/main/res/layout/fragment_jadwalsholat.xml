@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootJadwal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+
+    <!-- HEADER -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#FF7A00">
+
+        <TextView
+            android:id="@+id/tvLokasi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jakarta"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tvNextPrayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ashar, 16:16"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30 Minutes Until Prayer"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <!-- SEARCH KOTA -->
+    <EditText
+        android:id="@+id/etSearchKota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cari kota"
+        android:padding="12dp"
+        android:layout_margin="16dp"
+        android:background="@android:drawable/edit_text"
+        android:inputType="text" />
+
+    <!-- LIST JADWAL -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvJadwal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="8dp" />
+
+</LinearLayout>

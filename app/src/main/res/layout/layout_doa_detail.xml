@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F8F9FA"
+    android:scrollbarThumbVertical="@android:color/transparent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="24dp">
+
+        <!-- Modern Card dengan Gradient Accent -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            android:backgroundTint="#FFFFFF">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Header Section dengan Gradient Bar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="28dp"
+                    android:paddingBottom="20dp">
+
+                    <!-- Gradient Accent Line -->
+                    <View
+                        android:layout_width="48dp"
+                        android:layout_height="4dp"
+                        android:background="@drawable/gradient_accent"
+                        android:layout_marginBottom="16dp" />
+
+                    <TextView
+                        android:id="@+id/tvJudul"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A1A1A"
+                        android:letterSpacing="0.01"
+                        android:lineHeight="32dp" />
+
+                </LinearLayout>
+
+                <!-- Arabic Text Section dengan Glassmorphism -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#F0F7F4"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="32dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="20dp"
+                    android:elevation="2dp">
+
+                    <TextView
+                        android:id="@+id/tvArab"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="28sp"
+                        android:lineSpacingMultiplier="1.8"
+                        android:textColor="#0D4D3B"
+                        android:gravity="end"
+                        android:textDirection="rtl"
+                        android:fontFamily="serif" />
+
+                </LinearLayout>
+
+                <!-- Translation Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="24dp"
+                    android:paddingBottom="32dp">
+
+                    <!-- Modern Label dengan Icon -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <View
+                            android:layout_width="6dp"
+                            android:layout_height="6dp"
+                            android:background="@drawable/circle_indicator"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Artinya"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="#666666"
+                            android:letterSpacing="0.08"
+                            android:textAllCaps="true" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvIndo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:lineHeight="28dp"
+                        android:textColor="#2D2D2D"
+                        android:fontFamily="sans-serif"
+                        android:alpha="0.9" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,5 +1,6 @@
-package com.ismaindra.alquranapp.ui.detail
+package com.ismaindra.alquranapp.ui.home
 
+import com.ismaindra.alquranapp.R
 import android.Manifest
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -14,6 +15,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.ResolvableApiException
@@ -23,7 +25,6 @@ import com.ismaindra.alquranapp.databinding.FragmentHomeBinding
 import com.ismaindra.alquranapp.ui.home.DoaAdapter
 import com.ismaindra.alquranapp.ui.home.HomeViewModel
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.observeOn
 import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -56,7 +57,13 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         fusedLocation = LocationServices.getFusedLocationProviderClient(requireContext())
-
+        //untuk navigasi ke doa hhh
+        binding.menuDoaPage.setOnClickListener {
+            findNavController().navigate(R.id.action_home_to_doaList)
+        }
+        binding.menuJadwalSholat.setOnClickListener {
+            findNavController().navigate(R.id.action_home_to_jadwalSholat)
+        }
         setupObservers()
         checkGPS()
         viewModel.loadDoaAcak()

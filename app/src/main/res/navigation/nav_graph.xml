@@ -6,20 +6,32 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.ismaindra.alquranapp.ui.detail.HomeFragment"
+        android:name="com.ismaindra.alquranapp.ui.home.HomeFragment"
         android:label="Beranda">
+
+        <action
+            android:id="@+id/action_home_to_doaList"
+            app:destination="@id/doaListFragment" />
+        <action
+            android:id="@+id/action_home_to_jadwalSholat"
+            app:destination="@+id/jadwalSholatFragment" />
+
     </fragment>
 
     <fragment
         android:id="@+id/surahListFragment"
         android:name="com.ismaindra.alquranapp.ui.surah.SurahListFragment"
-        android:label="Daftar Surah">
-    </fragment>
+        android:label="Daftar Surah" />
 
     <fragment
         android:id="@+id/bookmarkFragment"
         android:name="com.ismaindra.alquranapp.ui.bookmark.BookmarkFragment"
-        android:label="Bookmark">
-    </fragment>
+        android:label="Bookmark" />
 
+    <fragment
+        android:id="@+id/doaListFragment"
+        android:name="com.ismaindra.alquranapp.ui.doa.DoaListFragment"
+        android:label="Daftar Doa" />
+    <fragment android:id="@+id/jadwalSholatFragment"
+        android:name="com.ismaindra.alquranapp.ui.jadwalSholat.JadwalSholatFragment"/>
 </navigation>
