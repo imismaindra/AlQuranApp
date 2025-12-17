@@ -25,11 +25,14 @@ class JadwalAdapter : RecyclerView.Adapter<JadwalAdapter.ViewHolder>() {
                 "Isya" to jadwal.isya
             )
         )
-        notifyDataSetChanged()
+        this.notifyDataSetChanged()
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view){
+        val tvNama: TextView = view.findViewById(R.id.tvNama)
+        val tvWaktu: TextView =  view.findViewById(R.id.tvWaktu)
 
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_jadwal, parent, false)
@@ -38,8 +41,8 @@ class JadwalAdapter : RecyclerView.Adapter<JadwalAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val (nama, waktu) = items[position]
-        holder.view.findViewById<TextView>(R.id.tvNama).text = nama
-        holder.view.findViewById<TextView>(R.id.tvWaktu).text = waktu
+        holder.tvNama.text = nama
+        holder.tvWaktu.text = waktu
     }
 
     override fun getItemCount() = items.size

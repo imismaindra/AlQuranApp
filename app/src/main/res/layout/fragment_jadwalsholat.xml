@@ -1,64 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rootJadwal"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/white">
+    android:fillViewport="true">
 
-    <!-- HEADER -->
     <LinearLayout
+        android:id="@+id/rootJadwal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="#FF7A00">
+        android:background="@android:color/white">
 
-        <TextView
-            android:id="@+id/tvLokasi"
-            android:layout_width="wrap_content"
+        <!-- HEADER -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Jakarta"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:paddingTop="25dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:background="#FF7A00">
 
-        <TextView
-            android:id="@+id/tvNextPrayer"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvLokasi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lokasi"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:clickable="true" />
+
+            <TextView
+                android:id="@+id/tvNextPrayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ashar, 16:16"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/tvCountdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Menuju waktu sholat"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- SEARCH -->
+        <EditText
+            android:id="@+id/etSearchKota"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ashar, 16:16"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:hint="Cari kota"
+            android:textColor="@android:color/black"
+            android:padding="12dp"
+            android:layout_margin="16dp"
+            android:background="@android:drawable/edit_text"
+            android:inputType="text" />
+
+        <!-- TITLE HARI INI -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Jadwal Hari Ini"
             android:textStyle="bold"
-            android:layout_marginTop="4dp" />
+            android:textSize="16sp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
 
-        <TextView
-            android:id="@+id/tvCountdown"
-            android:layout_width="wrap_content"
+        <!-- JADWAL HARI INI -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvJadwal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="30 Minutes Until Prayer"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:layout_marginTop="2dp" />
+            android:nestedScrollingEnabled="false"
+            android:paddingBottom="8dp" />
+
+        <!-- TITLE BULANAN -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Jadwal Bulan Ini"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <!-- JADWAL BULANAN -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvJadwalBulanan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:paddingBottom="16dp" />
+
     </LinearLayout>
-
-    <!-- SEARCH KOTA -->
-    <EditText
-        android:id="@+id/etSearchKota"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Cari kota"
-        android:padding="12dp"
-        android:layout_margin="16dp"
-        android:background="@android:drawable/edit_text"
-        android:inputType="text" />
-
-    <!-- LIST JADWAL -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvJadwal"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingBottom="8dp" />
-
-</LinearLayout>
+</androidx.core.widget.NestedScrollView>

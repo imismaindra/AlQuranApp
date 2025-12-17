@@ -1,10 +1,6 @@
     package com.ismaindra.alquranapp.data.api
 
-    import com.ismaindra.alquranapp.data.model.SurahDetailResponse
-    import com.ismaindra.alquranapp.data.model.DoaResponse
-    import com.ismaindra.alquranapp.data.model.JadwalHarianResponse
-    import com.ismaindra.alquranapp.data.model.KotaResponse
-    import com.ismaindra.alquranapp.data.model.SurahResponse
+    import com.ismaindra.alquranapp.data.model.*
     import retrofit2.Response
     import retrofit2.http.GET
     import retrofit2.http.Path
@@ -37,4 +33,12 @@
             @Path("bulan") bulan: String,
             @Path("tanggal") tanggal: String
         ): JadwalHarianResponse
+
+//        @GET("sholat/jadwal/{kota}/{tahun}/{bulan}")
+        @GET("sholat/jadwal/{kota}/{tahun}/{bulan}")
+        suspend fun getJadwalBulanan(
+            @Path("kota") kotaId: String,
+            @Path("tahun") tahun: String,
+            @Path("bulan") bulan: String
+        ):JadwalBulananResponse
     }
