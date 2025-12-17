@@ -3,25 +3,88 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingVertical="12dp"
-    android:paddingHorizontal="16dp">
+    android:gravity="center_vertical"
+    android:paddingVertical="16dp"
+    android:paddingHorizontal="20dp"
+    android:background="@drawable/ripple_effect">
 
-    <TextView
-        android:id="@+id/tvNama"
+    <LinearLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_prayer_icon"
+        android:gravity="center"
+        android:layout_marginEnd="16dp">
+
+        <ImageView
+            android:id="@+id/ivPrayerIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_prayer"
+            android:tint="#FF7A00"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Subuh"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvWaktu"
+        <TextView
+            android:id="@+id/tvNama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Subuh"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:letterSpacing="0.01" />
+
+        <TextView
+            android:id="@+id/tvKeterangan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fajar"
+            android:textSize="12sp"
+            android:textColor="#9E9E9E"
+            android:layout_marginTop="2dp"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="04:23"
-        android:textSize="16sp"
-        android:textColor="@android:color/black" />
+        android:orientation="vertical"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/tvWaktu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="04:23"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#212121"
+            android:fontFamily="sans-serif-medium" />
+
+        <TextView
+            android:id="@+id/tvStatusWaktu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WIB"
+            android:textSize="11sp"
+            android:textColor="#9E9E9E"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivNotification"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_bell"
+        android:tint="#BDBDBD"
+        android:layout_marginStart="12dp"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="4dp"/>
 
 </LinearLayout>

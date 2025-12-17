@@ -1,110 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="#F5F5F5">
 
     <LinearLayout
         android:id="@+id/rootJadwal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white">
+        android:orientation="vertical">
 
-        <!-- HEADER -->
+        <!-- HEADER WITH GRADIENT -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="25dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="16dp"
-            android:background="#FF7A00">
+            android:paddingTop="32dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp"
+            android:background="@drawable/header_gradient"
+            android:elevation="4dp">
 
-            <TextView
-                android:id="@+id/tvLokasi"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lokasi"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:clickable="true" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_location"
+                    android:tint="@android:color/white"
+                    android:layout_marginEnd="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvLokasi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Surabaya, Jawa Timur"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:alpha="0.9"
+                    android:clickable="true"/>
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_chevron_down"
+                    android:tint="@android:color/white"
+                    android:alpha="0.8"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvNextPrayer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ashar, 16:16"
+                android:text="Ashar"
                 android:textColor="@android:color/white"
-                android:textSize="20sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
-                android:layout_marginTop="4dp" />
+                android:letterSpacing="0.02"
+                android:layout_marginTop="20dp" />
 
             <TextView
-                android:id="@+id/tvCountdown"
+                android:id="@+id/tvNextPrayerTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Menuju waktu sholat"
+                android:text="16:16 WIB"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp" />
+                android:textSize="24sp"
+                android:alpha="0.95"
+                android:layout_marginTop="4dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_countdown"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_clock"
+                    android:tint="@android:color/white"
+                    android:layout_marginEnd="6dp"/>
+
+                <TextView
+                    android:id="@+id/tvCountdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 jam 34 menit lagi"
+                    android:textColor="@android:color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
         </LinearLayout>
 
-        <!-- SEARCH -->
-        <EditText
-            android:id="@+id/etSearchKota"
+        <!-- SEARCH WITH CARD STYLE -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Cari kota"
-            android:textColor="@android:color/black"
-            android:padding="12dp"
-            android:layout_margin="16dp"
-            android:background="@android:drawable/edit_text"
-            android:inputType="text" />
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="-24dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@android:color/white">
 
-        <!-- TITLE HARI INI -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="Jadwal Hari Ini"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="14dp">
 
-        <!-- JADWAL HARI INI -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvJadwal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:paddingBottom="8dp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_search"
+                    android:tint="#9E9E9E"
+                    android:layout_marginEnd="12dp"/>
 
-        <!-- TITLE BULANAN -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="Jadwal Bulan Ini"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp" />
+                <EditText
+                    android:id="@+id/etSearchKota"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Cari kota atau wilayah"
+                    android:textColorHint="#9E9E9E"
+                    android:textColor="#212121"
+                    android:textSize="15sp"
+                    android:background="@null"
+                    android:inputType="text" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-        <!-- JADWAL BULANAN -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvJadwalBulanan"
+        <!-- JADWAL HARI INI SECTION -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:paddingBottom="16dp" />
+            android:orientation="vertical"
+            android:layout_marginTop="28dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Jadwal Hari Ini"
+                    android:textColor="#212121"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvTanggalHariIni"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rabu, 18 Des 2024"
+                    android:textColor="#757575"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@android:color/white">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvJadwal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:paddingVertical="8dp" />
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+        <!-- JADWAL BULANAN SECTION -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="28dp"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Jadwal Bulan Ini"
+                    android:textColor="#212121"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvBulanTahun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Desember 2024"
+                    android:textColor="#757575"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvJadwalBulanan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:paddingHorizontal="20dp"
+                android:clipToPadding="false" />
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
