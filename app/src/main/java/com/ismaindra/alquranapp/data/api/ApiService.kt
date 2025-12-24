@@ -2,7 +2,9 @@
 
     import com.ismaindra.alquranapp.data.model.*
     import retrofit2.Response
+    import retrofit2.http.Body
     import retrofit2.http.GET
+    import retrofit2.http.POST
     import retrofit2.http.Path
 
     interface ApiService {
@@ -41,4 +43,11 @@
             @Path("tahun") tahun: String,
             @Path("bulan") bulan: String
         ):JadwalBulananResponse
+    }
+
+    interface LoginApiService{
+        @POST("login")
+        suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
+        @POST("/api/register")
+        suspend fun register(@Body request: RegisterRequest): Response<AuthResponse>
     }

@@ -1,37 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/homeFragment">  <!-- Bisa diganti ke @id/loginFragment kalau mau buka app langsung ke login -->
+
+    <!-- ==================== FRAGMENT UTAMA (Bottom Navigation) ==================== -->
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ismaindra.alquranapp.ui.home.HomeFragment"
-        android:label="Beranda">
+        android:label="Beranda"
+        tools:layout="@layout/fragment_home">
 
         <action
             android:id="@+id/action_home_to_doaList"
             app:destination="@id/doaListFragment" />
         <action
             android:id="@+id/action_home_to_jadwalSholat"
-            app:destination="@+id/jadwalSholatFragment" />
-
+            app:destination="@id/jadwalSholatFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/surahListFragment"
         android:name="com.ismaindra.alquranapp.ui.surah.SurahListFragment"
-        android:label="Daftar Surah" />
+        android:label="Daftar Surah"
+        tools:layout="@layout/fragment_surah_list" />
 
     <fragment
         android:id="@+id/bookmarkFragment"
         android:name="com.ismaindra.alquranapp.ui.bookmark.BookmarkFragment"
-        android:label="Bookmark" />
+        android:label="Bookmark"
+        tools:layout="@layout/fragment_bookmark" />
+
+    <!-- ==================== FRAGMENT AUTH ==================== -->
+
+    <!-- Login Fragment -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.ismaindra.alquranapp.ui.login.LoginFragment"
+        android:label="Masuk"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+        <!-- Setelah login sukses, back button tidak kembali ke login lagi -->
+    </fragment>
+
+    <!-- Register Fragment -->
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.ismaindra.alquranapp.ui.auth.register.RegisterFragment"
+        android:label="Daftar"
+        tools:layout="@layout/fragment_register">
+
+        <!-- Kembali ke login dengan popBackStack (tidak perlu action khusus, cukup popBackStack di kode) -->
+    </fragment>
+
+    <!-- Profile Fragment (menu User di bottom nav) -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.ismaindra.alquranapp.ui.profile.ProfileFragment"
+        android:label="Profil"
+        tools:layout="@layout/fragment_profile">
+
+        <!-- Opsional: action logout kembali ke login -->
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <!-- ==================== FRAGMENT LAINNYA ==================== -->
 
     <fragment
         android:id="@+id/doaListFragment"
         android:name="com.ismaindra.alquranapp.ui.doa.DoaListFragment"
-        android:label="Daftar Doa" />
-    <fragment android:id="@+id/jadwalSholatFragment"
-        android:name="com.ismaindra.alquranapp.ui.jadwalSholat.JadwalSholatFragment"/>
+        android:label="Daftar Doa"
+        tools:layout="@layout/fragment_doa_list" />
+
+    <fragment
+        android:id="@+id/jadwalSholatFragment"
+        android:name="com.ismaindra.alquranapp.ui.jadwalSholat.JadwalSholatFragment"
+        android:label="Jadwal Sholat"
+        tools:layout="@layout/fragment_jadwalsholat" />
+
 </navigation>

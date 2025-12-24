@@ -24,12 +24,26 @@ object RetrofitClient {
         .setLenient()
         .create()
 
-    val apiService: ApiService by lazy {
+    private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-            .create(ApiService::class.java)
+    }
+
+    // API untuk Al-Quran dan Doa
+    val apiService: ApiService by lazy {
+        retrofit.create(ApiService::class.java)
+    }
+
+    // API untuk Jadwal Sholat (jika base URL sama)
+    val sholatApi: SholatApiService by lazy {
+        retrofit.create(SholatApiService::class.java)
+    }
+
+    // API untuk Login & Register
+    val authApi: LoginApiService by lazy {
+        retrofit.create(LoginApiService::class.java)
     }
 }

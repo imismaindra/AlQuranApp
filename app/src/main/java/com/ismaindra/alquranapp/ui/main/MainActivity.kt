@@ -12,10 +12,13 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.ismaindra.alquranapp.databinding.ActivityMainBinding
 import com.ismaindra.alquranapp.R
+import com.ismaindra.alquranapp.utils.AuthManager
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var fusedLocation: FusedLocationProviderClient
+    private lateinit var authManager: AuthManager  // Sekarang sudah resolve!
 
 //    private val locationPermissionLauncher =
 //        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { perms ->
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 //        requestLocationPermission()
 
 //        setupToolbar()
+    authManager = AuthManager(this)
         setupNavigation()
     }
 
@@ -86,6 +90,17 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_bookmark -> {
 //                     Navigate to bookmark fragment
                      navController.navigate(R.id.bookmarkFragment)
+                    true
+                }
+                R.id.nav_users -> {
+                    // Cek status login
+                    if (authManager.isLoggedIn()) {
+                        // Sudah login → ke Profile
+                        navController.navigate(R.id.profileFragment)
+                    } else {
+                        // Belum login → ke Login
+                        navController.navigate(R.id.loginFragment)
+                    }
                     true
                 }
                 else -> false
