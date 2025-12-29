@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Pattern Islamic Geometric -->
+
+    <!-- Center Star -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M100,40 L110,70 L140,70 L115,90 L125,120 L100,100 L75,120 L85,90 L60,70 L90,70 Z" />
+
+    <!-- Top Star -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M100,0 L105,15 L120,15 L108,25 L113,40 L100,30 L87,40 L92,25 L80,15 L95,15 Z" />
+
+    <!-- Bottom Star -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M100,160 L105,175 L120,175 L108,185 L113,200 L100,190 L87,200 L92,185 L80,175 L95,175 Z" />
+
+    <!-- Left Star -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M40,100 L50,105 L50,120 L60,108 L75,113 L65,100 L75,87 L60,92 L50,80 L50,95 Z" />
+
+    <!-- Right Star -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M160,100 L150,105 L150,120 L140,108 L125,113 L135,100 L125,87 L140,92 L150,80 L150,95 Z" />
+
+    <!-- Decorative Circle 1 (Inner) -->
+    <path
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="2"
+        android:fillColor="#00000000"
+        android:pathData="M130,100 A30,30 0 1,1 70,100 A30,30 0 1,1 130,100 Z" />
+
+    <!-- Decorative Circle 2 (Outer) -->
+    <path
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="1"
+        android:fillColor="#00000000"
+        android:pathData="M150,100 A50,50 0 1,1 50,100 A50,50 0 1,1 150,100 Z" />
+
+    <!-- Corner Ornaments Top Left -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M10,10 Q10,25 25,25 L25,10 Z" />
+
+    <!-- Corner Ornaments Top Right -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M190,10 L175,10 Q190,10 190,25 Z" />
+
+    <!-- Corner Ornaments Bottom Left -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M10,190 L10,175 Q10,190 25,190 Z" />
+
+    <!-- Corner Ornaments Bottom Right -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M190,190 L190,175 Q190,190 175,190 Z" />
+
+    <!-- Additional Decorative Elements -->
+    <!-- Top Left Diamond -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M30,30 L35,35 L30,40 L25,35 Z" />
+
+    <!-- Top Right Diamond -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M170,30 L175,35 L170,40 L165,35 Z" />
+
+    <!-- Bottom Left Diamond -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M30,170 L35,175 L30,180 L25,175 Z" />
+
+    <!-- Bottom Right Diamond -->
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M170,170 L175,175 L170,180 L165,175 Z" />
+
+</vector>
