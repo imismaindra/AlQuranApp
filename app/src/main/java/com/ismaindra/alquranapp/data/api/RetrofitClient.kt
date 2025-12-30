@@ -46,4 +46,7 @@ object RetrofitClient {
     val authApi: LoginApiService by lazy {
         retrofit.create(LoginApiService::class.java)
     }
+    val bookmarkAPI: BookmarkApiService by lazy {
+        retrofit.create(BookmarkApiService::class.java)
+    }
 }

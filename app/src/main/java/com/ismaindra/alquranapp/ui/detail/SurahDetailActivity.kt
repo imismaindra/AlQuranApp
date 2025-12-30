@@ -83,13 +83,19 @@ class SurahDetailActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        val showBismillah = surahNumber != 1 && surahNumber!= 9
-        ayahAdapter = AyahAdapter(showBismillah=showBismillah)
+        val surahNumber = intent.getIntExtra(EXTRA_SURAH_NUMBER, 0)
+        val showBismillah = surahNumber != 1 && surahNumber != 9
+
+        // Pass lifecycleScope ke adapter
+        ayahAdapter = AyahAdapter(
+            showBismillah = showBismillah,
+            lifecycleScope = lifecycleScope  // Tambahkan ini
+        )
 
         binding.rvAyah.apply {
             layoutManager = LinearLayoutManager(this@SurahDetailActivity)
             adapter = ayahAdapter
-            setHasFixedSize(false)
+            setHasFixedSize(true)
         }
     }
     private fun setupAudioButton(){

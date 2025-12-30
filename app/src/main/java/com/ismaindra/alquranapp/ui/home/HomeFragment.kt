@@ -24,6 +24,7 @@ import com.ismaindra.alquranapp.data.api.RetrofitClient
 import com.ismaindra.alquranapp.databinding.FragmentHomeBinding
 import com.ismaindra.alquranapp.ui.home.DoaAdapter
 import com.ismaindra.alquranapp.ui.home.HomeViewModel
+import com.ismaindra.alquranapp.utils.AuthManager
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URL
@@ -41,7 +42,7 @@ class HomeFragment : Fragment() {
     private var nextTimeMillis: Long? = null
     private val viewModel: HomeViewModel by lazy {
         val apiService = RetrofitClient.apiService
-        HomeViewModel(apiService)
+        HomeViewModel(apiService, AuthManager(requireContext()))
     }
 
     override fun onCreateView(
@@ -63,6 +64,9 @@ class HomeFragment : Fragment() {
         }
         binding.menuJadwalSholat.setOnClickListener {
             findNavController().navigate(R.id.action_home_to_jadwalSholat)
+        }
+        viewModel.userName.observe(viewLifecycleOwner) { name ->
+            binding.TvNamaHome.text = name ?: "Sahabat"
         }
         setupObservers()
         checkGPS()

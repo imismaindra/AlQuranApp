@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,10 +19,13 @@ import com.ismaindra.alquranapp.R
 import com.ismaindra.alquranapp.data.model.Ayat
 import com.ismaindra.alquranapp.data.model.BookmarkItem
 import com.ismaindra.alquranapp.databinding.ItemAyahBinding
+import com.ismaindra.alquranapp.utils.AuthManager
 import com.ismaindra.alquranapp.utils.BookmarkManager
+import kotlinx.coroutines.launch
 
 class AyahAdapter(
-    private val showBismillah: Boolean = true
+    private val showBismillah: Boolean = true,
+    private val lifecycleScope: LifecycleCoroutineScope
 ) : ListAdapter<Ayat, RecyclerView.ViewHolder>(AyahDiffCallback()) {
 
     companion object {
@@ -86,6 +90,8 @@ class AyahAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private val context: Context = binding.root.context
+        private val bookmarkManager = BookmarkManager(context)
+        private val authManager = AuthManager(context)
 
         fun bind(ayat: Ayat) {
             binding.apply {
@@ -93,16 +99,38 @@ class AyahAdapter(
                 tvArabic.text = ayat.arabic ?: ""
                 tvTranslation.text = ayat.terjemahan ?: ""
 
+                // Update bookmark icon status
+                updateBookmarkIcon(ayat)
+
                 btnCopy.setOnClickListener { copyToClipboard(ayat) }
                 btnPlay.setOnClickListener {
                     Toast.makeText(context, "Fitur audio akan segera hadir", Toast.LENGTH_SHORT).show()
                 }
-                btnBookmark.setOnClickListener { bookmarkAyah(ayat) }
+                btnBookmark.setOnClickListener {
+                    toggleBookmark(ayat)
+                }
             }
         }
 
-        private fun bookmarkAyah(ayat: Ayat) {
-            val bookmarkManager = BookmarkManager(context)
+        private fun updateBookmarkIcon(ayat: Ayat) {
+            val activity = context as? SurahDetailActivity
+            val surahNumber = activity?.intent?.getIntExtra(SurahDetailActivity.EXTRA_SURAH_NUMBER, 0) ?: 0
+            val isBookmarked = bookmarkManager.isBookmarked(surahNumber, ayat.nomor ?: 0)
+
+            // Update icon berdasarkan status bookmark
+            binding.btnBookmark.setImageResource(
+                if (isBookmarked) R.drawable.ic_bookmark_filled
+                else R.drawable.ic_bookmark_border
+            )
+        }
+
+        private fun toggleBookmark(ayat: Ayat) {
+            // Cek apakah user sudah login
+            if (!authManager.isLoggedIn()) {
+                Toast.makeText(context, "Silakan login terlebih dahulu untuk menyimpan bookmark", Toast.LENGTH_LONG).show()
+                return
+            }
+
             val activity = context as? SurahDetailActivity
             val surahNumber = activity?.intent?.getIntExtra(SurahDetailActivity.EXTRA_SURAH_NUMBER, 0) ?: 0
             val surahName = activity?.intent?.getStringExtra(SurahDetailActivity.EXTRA_SURAH_NAME) ?: ""
@@ -115,12 +143,29 @@ class AyahAdapter(
                 translation = ayat.terjemahan ?: ""
             )
 
-            if (bookmarkManager.isBookmarked(surahNumber, ayat.nomor ?: 0)) {
-                bookmarkManager.removeBookmark(surahNumber, ayat.nomor ?: 0)
-                Toast.makeText(context, "Bookmark dihapus", Toast.LENGTH_SHORT).show()
-            } else {
-                bookmarkManager.addBookmark(bookmark)
-                Toast.makeText(context, "Ayat ditandai", Toast.LENGTH_SHORT).show()
+            // Cek apakah sudah di-bookmark
+            val isCurrentlyBookmarked = bookmarkManager.isBookmarked(surahNumber, ayat.nomor ?: 0)
+
+            lifecycleScope.launch {
+                if (isCurrentlyBookmarked) {
+                    // Hapus bookmark
+                    val result = bookmarkManager.removeBookmark(surahNumber, ayat.nomor ?: 0)
+                    result.onSuccess {
+                        Toast.makeText(context, "Bookmark dihapus", Toast.LENGTH_SHORT).show()
+                        updateBookmarkIcon(ayat)
+                    }.onFailure { error ->
+                        Toast.makeText(context, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // Tambah bookmark
+                    val result = bookmarkManager.addBookmark(bookmark)
+                    result.onSuccess {
+                        Toast.makeText(context, "Ayat ditandai", Toast.LENGTH_SHORT).show()
+                        updateBookmarkIcon(ayat)
+                    }.onFailure { error ->
+                        Toast.makeText(context, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 
