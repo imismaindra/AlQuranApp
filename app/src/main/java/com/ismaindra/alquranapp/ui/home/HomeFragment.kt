@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,9 +22,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.ismaindra.alquranapp.data.api.RetrofitClient
+import com.ismaindra.alquranapp.data.model.Hadist
 import com.ismaindra.alquranapp.databinding.FragmentHomeBinding
-import com.ismaindra.alquranapp.ui.home.DoaAdapter
-import com.ismaindra.alquranapp.ui.home.HomeViewModel
+import com.ismaindra.alquranapp.ui.hadist.HadistAdapter
+import com.ismaindra.alquranapp.ui.hadist.HadistViewModel
 import com.ismaindra.alquranapp.utils.AuthManager
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -36,7 +38,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var fusedLocation: FusedLocationProviderClient
-    private val scope = CoroutineScope(Dispatchers.Main)
     private var countdownJob: Job? = null
     private var nextName: String? = null
     private var nextTimeMillis: Long? = null
@@ -44,6 +45,8 @@ class HomeFragment : Fragment() {
         val apiService = RetrofitClient.apiService
         HomeViewModel(apiService, AuthManager(requireContext()))
     }
+    private lateinit var hadistViewModel: HadistViewModel
+    private lateinit var hadistAdapter: HadistAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,27 +61,90 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         fusedLocation = LocationServices.getFusedLocationProviderClient(requireContext())
-        //untuk navigasi ke doa hhh
+
+        // Setup ViewModel untuk Hadist
+        setupHadistViewModel()
+
+        // Navigasi ke doa
         binding.menuDoaPage.setOnClickListener {
             findNavController().navigate(R.id.action_home_to_doaList)
         }
         binding.menuJadwalSholat.setOnClickListener {
             findNavController().navigate(R.id.action_home_to_jadwalSholat)
         }
+
         viewModel.userName.observe(viewLifecycleOwner) { name ->
             binding.TvNamaHome.text = name ?: "Sahabat"
         }
+
         setupObservers()
+        setupHadistObservers()
         checkGPS()
         viewModel.loadDoaAcak()
+
+        // Load hadist acak
+        hadistViewModel.getRandomHadist()
+    }
+
+    private fun setupHadistViewModel() {
+        hadistViewModel = ViewModelProvider(this)[HadistViewModel::class.java]
+
+        // Setup RecyclerView untuk Hadist
+        binding.rvHadistUntukmu.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvHadistUntukmu.setHasFixedSize(true)
+    }
+
+    private fun setupHadistObservers() {
+        // Observe hadist list
+        hadistViewModel.hadistList.observe(viewLifecycleOwner) { hadistList ->
+            if (hadistList.isNotEmpty()) {
+                setupHadistAdapter(hadistList)
+            }
+        }
+
+        // Observe loading state
+        hadistViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            // Anda bisa tambahkan loading indicator di sini jika diperlukan
+            // binding.progressBarHadist.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        // Observe error message
+        hadistViewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+            if (!errorMessage.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setupHadistAdapter(hadistList: List<Hadist>) {
+        hadistAdapter = HadistAdapter(hadistList) { hadist ->
+            onHadistClick(hadist)
+        }
+        binding.rvHadistUntukmu.adapter = hadistAdapter
+    }
+
+    private fun onHadistClick(hadist: Hadist) {
+        // Handle klik item hadist
+        // Anda bisa navigate ke detail hadist atau tampilkan bottom sheet
+        Toast.makeText(
+            requireContext(),
+            "Hadist: ${hadist.judul}",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        // Contoh navigasi ke detail (jika sudah ada):
+        // val action = HomeFragmentDirections.actionHomeToHadistDetail(hadist.id)
+        // findNavController().navigate(action)
     }
 
     private fun setupObservers() {
         // Observe doa list
         lifecycleScope.launch {
-            viewModel.doaList.collect { doaList ->
-                if (doaList.isNotEmpty()) {
-                    updateDoaCards(doaList)
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.doaList.collect { doaList ->
+                    if (doaList.isNotEmpty()) {
+                        updateDoaCards(doaList)
+                    }
                 }
             }
         }
@@ -94,7 +160,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.errorMessage.collect { error ->
                 error?.let {
-                    // Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -110,7 +176,6 @@ class HomeFragment : Fragment() {
 
         binding.rvDoaHariIni.adapter = adapter
     }
-
 
     override fun onPause() {
         super.onPause()
@@ -129,10 +194,16 @@ class HomeFragment : Fragment() {
         val client = LocationServices.getSettingsClient(requireActivity())
         val task = client.checkLocationSettings(builder.build())
 
-        task.addOnSuccessListener { getUserLocation() }
+        task.addOnSuccessListener {
+            // PERBAIKAN: Cek apakah fragment masih attached sebelum melanjutkan
+            if (isAdded && context != null) {
+                getUserLocation()
+            }
+        }
 
         task.addOnFailureListener { e ->
-            if (e is ResolvableApiException) {
+            // PERBAIKAN: Cek apakah fragment masih attached
+            if (isAdded && e is ResolvableApiException) {
                 try {
                     e.startResolutionForResult(requireActivity(), 1001)
                 } catch (_: IntentSender.SendIntentException) {}
@@ -141,6 +212,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun getUserLocation() {
+        // PERBAIKAN: Cek lagi apakah fragment masih attached
+        if (!isAdded || context == null) {
+            return
+        }
+
         val fine = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
         val coarse = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
 
@@ -150,11 +226,21 @@ class HomeFragment : Fragment() {
         }
 
         fusedLocation.lastLocation.addOnSuccessListener { last ->
+            // PERBAIKAN: Cek apakah fragment masih attached sebelum mengakses binding
+            if (!isAdded || context == null || _binding == null) {
+                return@addOnSuccessListener
+            }
+
             if (last != null) {
                 getAddressInfo(last.latitude, last.longitude)
             } else {
                 fusedLocation.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener { current ->
+                        // PERBAIKAN: Cek lagi untuk callback nested
+                        if (!isAdded || context == null || _binding == null) {
+                            return@addOnSuccessListener
+                        }
+
                         if (current != null) {
                             getAddressInfo(current.latitude, current.longitude)
                         } else {
@@ -166,9 +252,19 @@ class HomeFragment : Fragment() {
     }
 
     private fun getAddressInfo(lat: Double, lon: Double) {
+        // PERBAIKAN: Cek apakah fragment masih attached
+        if (!isAdded || context == null) {
+            return
+        }
+
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
 
-        val handler = { list: List<Address>? ->
+        val handler: (List<Address>?) -> Unit = handler@{ list ->
+            // PERBAIKAN: Cek apakah fragment masih attached sebelum update UI
+            if (!isAdded || context == null || _binding == null) {
+                return@handler
+            }
+
             val addr = list?.firstOrNull()
             val city = if (addr != null) extractCity(addr) else "Tidak diketahui"
 
@@ -208,7 +304,8 @@ class HomeFragment : Fragment() {
         if (Build.VERSION.SDK_INT >= 33) {
             geocoder.getFromLocation(lat, lon, 1) { handler(it) }
         } else {
-            scope.launch(Dispatchers.IO) {
+            // PERBAIKAN: Gunakan lifecycleScope instead of manual scope
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val list = try {
                     geocoder.getFromLocation(lat, lon, 1)
                 } catch (_: Exception) {
@@ -225,8 +322,14 @@ class HomeFragment : Fragment() {
     private fun startCountdown() {
         countdownJob?.cancel()
 
-        countdownJob = scope.launch {
+        // PERBAIKAN: Gunakan lifecycleScope instead of manual scope
+        countdownJob = viewLifecycleOwner.lifecycleScope.launch {
             while (isActive) {
+                // PERBAIKAN: Cek apakah binding masih ada
+                if (_binding == null || !isAdded) {
+                    break
+                }
+
                 if (nextName != null && nextTimeMillis != null) {
                     val remaining = nextTimeMillis!! - System.currentTimeMillis()
 
@@ -268,17 +371,27 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchCityId(city: String, callback: (String?) -> Unit) {
-        scope.launch(Dispatchers.IO) {
+        // PERBAIKAN: Gunakan lifecycleScope
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val url = "https://api.myquran.com/v2/sholat/kota/cari/${city.lowercase()}"
                 val response = URL(url).readText()
                 val json = JSONObject(response)
                 val id = json.getJSONArray("data").getJSONObject(0).getString("id")
 
-                withContext(Dispatchers.Main) { callback(id) }
+                withContext(Dispatchers.Main) {
+                    // PERBAIKAN: Cek apakah fragment masih attached
+                    if (isAdded && context != null) {
+                        callback(id)
+                    }
+                }
 
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) { callback(null) }
+                withContext(Dispatchers.Main) {
+                    if (isAdded && context != null) {
+                        callback(null)
+                    }
+                }
             }
         }
     }
@@ -286,17 +399,27 @@ class HomeFragment : Fragment() {
     private fun fetchJadwal(id: String, callback: (JSONObject?) -> Unit) {
         val today = SimpleDateFormat("yyyy-MM-dd", Locale("id", "ID")).format(Date())
 
-        scope.launch(Dispatchers.IO) {
+        // PERBAIKAN: Gunakan lifecycleScope
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val url = "https://api.myquran.com/v2/sholat/jadwal/$id/$today"
                 val response = URL(url).readText()
                 val json = JSONObject(response)
                 val jadwal = json.getJSONObject("data").getJSONObject("jadwal")
 
-                withContext(Dispatchers.Main) { callback(jadwal) }
+                withContext(Dispatchers.Main) {
+                    // PERBAIKAN: Cek apakah fragment masih attached
+                    if (isAdded && context != null && _binding != null) {
+                        callback(jadwal)
+                    }
+                }
 
             } catch (_: Exception) {
-                withContext(Dispatchers.Main) { callback(null) }
+                withContext(Dispatchers.Main) {
+                    if (isAdded && context != null) {
+                        callback(null)
+                    }
+                }
             }
         }
     }
@@ -340,7 +463,8 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        countdownJob?.cancel()
         _binding = null
-        scope.cancel()
+        // PERBAIKAN: Tidak perlu cancel scope manual karena menggunakan lifecycleScope
     }
 }

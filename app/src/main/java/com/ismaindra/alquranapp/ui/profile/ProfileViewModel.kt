@@ -1,5 +1,6 @@
 package com.ismaindra.alquranapp.ui.profile
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,12 +18,22 @@ class ProfileViewModel(private val authManager: AuthManager) : ViewModel() {
         loadUserData()
     }
 
-    private fun loadUserData() {
-        _userName.value = authManager.getUserName()
-        _userEmail.value = authManager.getUserEmail()
+    fun loadUserData() {
+        val name = authManager.getUserName()
+        val email = authManager.getUserEmail()
+
+        Log.d("ProfileViewModel", "Loading user data - Name: $name, Email: $email")
+
+        _userName.value = name
+        _userEmail.value = email
     }
 
     fun logout() {
+        Log.d("ProfileViewModel", "Logging out user")
         authManager.logout()
+
+        // Clear LiveData setelah logout
+        _userName.value = null
+        _userEmail.value = null
     }
 }

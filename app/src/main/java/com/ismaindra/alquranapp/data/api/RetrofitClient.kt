@@ -1,6 +1,7 @@
 package com.ismaindra.alquranapp.data.api
 
 import com.google.gson.GsonBuilder
+import com.ismaindra.alquranapp.MyApplication
 import com.ismaindra.alquranapp.utils.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,7 +16,7 @@ object RetrofitClient {
     }
 
     private val client = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
+        .addInterceptor(AuthInterceptor(MyApplication.appContext))
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .build()
@@ -48,5 +49,8 @@ object RetrofitClient {
     }
     val bookmarkAPI: BookmarkApiService by lazy {
         retrofit.create(BookmarkApiService::class.java)
+    }
+    val hadistApi: HadistsApiService by lazy{
+        retrofit.create(HadistsApiService::class.java)
     }
 }

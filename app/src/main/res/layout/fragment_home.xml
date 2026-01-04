@@ -1,29 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background_light"
-        android:fillViewport="true">
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:fillViewport="true">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:background="@drawable/card_gradient"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:paddingBottom="24dp">
+
+            <!-- Greeting -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/card_gradient"
-                android:orientation="vertical"
-                android:padding="20dp"
-                android:paddingBottom="24dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
 
-                <!-- Greeting -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/TvNamaHome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Assalamu'alaikum, sahabat"
+                        android:textColor="@color/text_white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="193dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:alpha="0.9"
+                        android:text="Surabaya, 20 Oktober 2025"
+                        android:textColor="@color/text_white"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <!-- Notification Icon -->
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_notifications"
+                    app:tint="@color/text_white" />
+
+            </LinearLayout>
+
+            <!-- Prayer Time Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardBackgroundColor="#80FFFFFF"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -32,421 +85,267 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/TvNamaHome"
+                            android:id="@+id/tv_prayer_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Assalamu'alaikum, sahabat"
+                            android:text="Magrib 17:30 WIB"
                             android:textColor="@color/text_white"
-                            android:textSize="20sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tv_date"
-                            android:layout_width="193dp"
+                            android:id="@+id/tv_prayer_countdown"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:alpha="0.9"
-                            android:text="Surabaya, 20 Oktober 2025"
+                            android:drawableStart="@drawable/ic_access_time"
+                            android:drawablePadding="4dp"
+                            android:text="00:00:00 Menjelang Azan"
                             android:textColor="@color/text_white"
                             android:textSize="12sp" />
 
                     </LinearLayout>
 
-                    <!-- Notification Icon -->
+                    <!-- Kaaba Icon -->
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_notifications"
-                        app:tint="@color/text_white" />
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@drawable/circle_white_bg"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_kabah"
+                        app:tint="@color/black"/>
+
 
                 </LinearLayout>
 
-                <!-- Prayer Time Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    app:cardBackgroundColor="#80FFFFFF"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/tv_prayer_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Magrib 17:30 WIB"
-                                android:textColor="@color/text_white"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tv_prayer_countdown"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:drawableStart="@drawable/ic_access_time"
-                                android:drawablePadding="4dp"
-                                android:text="00:00:00 Menjelang Azan"
-                                android:textColor="@color/text_white"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                        <!-- Kaaba Icon -->
-                        <ImageView
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/circle_white_bg"
-                            android:padding="12dp"
-                            android:src="@drawable/ic_kabah"
-                            app:tint="@color/black"/>
-
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/background_light"
-                android:paddingTop="20dp">
-
-                <!-- Quick Menu Icons -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="20dp"
-                    android:gravity="center"
-                    android:weightSum="4">
-
-                    <!-- Al-Quran -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
-                            android:src="@drawable/ic_al_quran"
-                            android:background="@drawable/circle_yellow_bg"
-                            android:padding="12dp"
-                            app:tint="@color/primary_yellow" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Al-Qur'an"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginTop="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- Doa -->
-                    <LinearLayout
-                        android:id="@+id/menuDoaPage"
-                        android:name="com.ismaindra.alquranapp.ui.doa.DoaListFragment"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
-                            android:src="@drawable/ic_berdoa"
-                            android:background="@drawable/circle_yellow_bg"
-                            android:padding="12dp"
-                            app:tint="@color/primary_yellow" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Doa"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginTop="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- Jadwal sholat -->
-                    <LinearLayout
-                        android:id="@+id/menuJadwalSholat"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
-                            android:src="@drawable/ic_shalat"
-                            android:background="@drawable/circle_yellow_bg"
-                            android:padding="12dp"
-                            app:tint="@color/primary_yellow" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Jadwal Sholat"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_primary"
-                            android:textAlignment="center"
-                            android:layout_marginTop="8dp" />
-
-                    </LinearLayout>
-
-                    <!-- Hadist -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:padding="8dp">
-
-                        <ImageView
-                            android:layout_width="55dp"
-                            android:layout_height="55dp"
-                            android:src="@drawable/ic_star"
-                            android:background="@drawable/circle_yellow_bg"
-                            android:padding="12dp"
-                            app:tint="@color/primary_yellow" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Hadist"
-                            android:textSize="12sp"
-                            android:textColor="@color/text_primary"
-                            android:layout_marginTop="8dp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <!-- Doa Hari Ini Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="20dp"
-                    android:paddingTop="24dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Doa Hari Ini"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lihat Semua"
-                        android:textSize="12sp"
-                        android:textColor="@color/primary_green"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-                <!-- Horizontal ScrollView for Cards -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_doa_hari_ini"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:layout_marginTop="12dp"
-                    android:overScrollMode="never"/>
-
-                <!-- Hadist Untukmu Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="20dp"
-                    android:paddingTop="24dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Hadist Untukmu"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Lihat Semua"
-                        android:textSize="12sp"
-                        android:textColor="@color/primary_green"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Category Chips -->
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:scrollbars="none">
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:singleSelection="true"
-                        app:selectionRequired="true">
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Semua"
-                            android:textColor="@color/chip_text_color"
-                            android:checked="true"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            app:chipBackgroundColor="@color/chip_background_selector"
-                            app:chipStrokeWidth="0dp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Islam"
-                            android:textColor="@color/chip_text_color"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            app:chipBackgroundColor="@color/chip_background_selector"
-                            app:chipStrokeWidth="0dp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Artikel"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            app:chipBackgroundColor="@color/chip_background_selector"
-                            app:chipStrokeWidth="0dp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Kisah Nabi"
-                            android:textColor="@color/chip_text_color"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            app:chipBackgroundColor="@color/chip_background_selector"
-                            app:chipStrokeWidth="0dp" />
-
-                        <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Kitab"
-                            android:textColor="@color/chip_text_color"
-                            style="@style/Widget.MaterialComponents.Chip.Choice"
-                            app:chipBackgroundColor="@color/chip_background_selector"
-                            app:chipStrokeWidth="0dp" />
-
-                    </com.google.android.material.chip.ChipGroup>
-
-                </HorizontalScrollView>
-
-                <!-- Feed Item -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="20dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="16dp">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:text="Pondok Gontor Segera Miliki Rumah Sakit Senilai Rp 80 Miliar"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold"
-                                    android:textColor="@color/text_primary"
-                                    android:maxLines="2"
-                                    android:ellipsize="end" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="8dp"
-                                    android:text="Rabu 13 Mei 2020  •  19:30"
-                                    android:textSize="11sp"
-                                    android:textColor="@color/text_secondary" />
-
-                            </LinearLayout>
-
-                            <ImageView
-                                android:layout_width="80dp"
-                                android:layout_height="80dp"
-                                android:layout_marginStart="12dp"
-                                android:src="@drawable/feed_image"
-                                android:scaleType="centerCrop"
-                                android:background="@drawable/rounded_corner" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Bottom Spacing -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp" />
-
-            </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
-    </ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/background_light"
+            android:paddingTop="20dp">
+
+            <!-- Quick Menu Icons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:gravity="center"
+                android:weightSum="4">
+
+                <!-- Al-Quran -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:src="@drawable/ic_al_quran"
+                        android:background="@drawable/circle_yellow_bg"
+                        android:padding="12dp"
+                        app:tint="@color/primary_yellow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Al-Qur'an"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+
+                <!-- Doa -->
+                <LinearLayout
+                    android:id="@+id/menuDoaPage"
+                    android:name="com.ismaindra.alquranapp.ui.doa.DoaListFragment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:src="@drawable/ic_berdoa"
+                        android:background="@drawable/circle_yellow_bg"
+                        android:padding="12dp"
+                        app:tint="@color/primary_yellow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Doa"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+
+                <!-- Jadwal sholat -->
+                <LinearLayout
+                    android:id="@+id/menuJadwalSholat"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:src="@drawable/ic_shalat"
+                        android:background="@drawable/circle_yellow_bg"
+                        android:padding="12dp"
+                        app:tint="@color/primary_yellow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jadwal Sholat"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:textAlignment="center"
+                        android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+
+                <!-- Hadist -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:src="@drawable/ic_star"
+                        android:background="@drawable/circle_yellow_bg"
+                        android:padding="12dp"
+                        app:tint="@color/primary_yellow" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hadist"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Doa Hari Ini Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="24dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Doa Hari Ini"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lihat Semua"
+                    android:textSize="12sp"
+                    android:textColor="@color/primary_green"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+            <!-- Horizontal ScrollView for Cards -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_doa_hari_ini"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:layout_marginTop="12dp"
+                android:overScrollMode="never"/>
+
+            <!-- Hadist Untukmu Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="24dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hadist Untukmu"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lihat Semua"
+                    android:textSize="12sp"
+                    android:textColor="@color/primary_green"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Category Chips -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:scrollbars="none">
+
+            </HorizontalScrollView>
+
+            <!-- RecyclerView untuk Hadist -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_hadist_untukmu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:layout_marginTop="12dp"
+                android:overScrollMode="never"
+                android:nestedScrollingEnabled="false" />
+
+            <!-- Bottom Spacing -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

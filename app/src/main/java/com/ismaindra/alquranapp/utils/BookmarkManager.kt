@@ -20,7 +20,7 @@ class BookmarkManager(context: Context) {
 
     companion object {
         private const val PREF_NAME = "alquran_bookmarks"
-        private const val KEY_BOOKMARKS = "bookmarks"
+        private const val KEY_BOOKMARKS = "bookmark"
         private const val TAG = "BookmarkManager"
     }
 
@@ -45,8 +45,8 @@ class BookmarkManager(context: Context) {
             val response = RetrofitClient.bookmarkAPI.getAllBookmarks(token)
 
             if (response.isSuccessful && response.body()?.status == true) {
-                val bookmarks = response.body()?.data?.bookmarks?.map { it.toBookmarkItem() } ?: emptyList()
-
+                val bookmarks = response.body()?.data?.map { it.toBookmarkItem() } ?: emptyList()
+                Log.d(TAG,"Response: ${bookmarks}")
                 // Simpan ke local storage
                 saveBookmarksToLocal(bookmarks)
 
@@ -60,7 +60,7 @@ class BookmarkManager(context: Context) {
         }
     }
 
-    // ADD: Tambah bookmark (ke API dan local)
+    //Tambah bookmark (ke API dan local)
     suspend fun addBookmark(bookmark: BookmarkItem): Result<BookmarkItem> = withContext(Dispatchers.IO) {
         try {
             if (!isUserLoggedIn()) {
@@ -98,31 +98,39 @@ class BookmarkManager(context: Context) {
         }
     }
 
-    // DELETE: Hapus bookmark (dari API dan local)
+    //Hapus bookmark (dari API dan local)
     suspend fun removeBookmark(surahNumber: Int, ayahNumber: Int): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             if (!isUserLoggedIn()) {
                 return@withContext Result.failure(Exception("User belum login"))
             }
-
             val token = getAuthToken() ?: return@withContext Result.failure(Exception("Token tidak ditemukan"))
 
-            // Cari ID bookmark dari local (asumsi ada field id)
-            // Jika tidak ada, perlu modifikasi BookmarkItem untuk menyimpan id dari API
-            // Untuk sementara, hapus dari local dulu
-            removeBookmarkFromLocal(surahNumber, ayahNumber)
+            val bookmarks = getBookmarksFromLocal()
+            val bookmarkToDelete = bookmarks.find{it.surahNumber == surahNumber && it.ayahNumber == ayahNumber}
+            if(bookmarkToDelete == null){
+                Log.w(TAG,"Bookmark yg ingin dihapus tidak ditemukan")
+                return@withContext Result.success(Unit)
 
-            // Note: Untuk menghapus dari API, kita butuh bookmark ID
-            // Ini memerlukan modifikasi pada BookmarkItem untuk menyimpan id dari server
+            }
+            val response = RetrofitClient.bookmarkAPI.deleteBookmark(token, bookmarkToDelete.id)
+            if (response.isSuccessful && response.body()?.status == true) {
 
-            Result.success(Unit)
+                removeBookmarkFromLocal(surahNumber, ayahNumber)
+                Log.d(TAG, "Bookmark (ID: ${bookmarkToDelete.id}) berhasil dihapus dari API dan lokal.")
+                Result.success(Unit)
+            } else {
+                val errorMessage = response.body()?.message ?: "Gagal menghapus bookmark dari server (HTTP ${response.code()})"
+                Log.e(TAG, "API Error: $errorMessage")
+                Result.failure(Exception(errorMessage))
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Error removing bookmark: ${e.message}")
             Result.failure(e)
         }
     }
 
-    // CLEAR ALL: Hapus semua bookmark
+    //Hapus semua bookmark
     suspend fun clearAllBookmarks(): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             if (!isUserLoggedIn()) {

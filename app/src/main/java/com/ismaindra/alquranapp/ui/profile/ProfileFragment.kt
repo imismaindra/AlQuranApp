@@ -1,6 +1,7 @@
 package com.ismaindra.alquranapp.ui.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.ismaindra.alquranapp.databinding.FragmentProfileBinding
 import com.ismaindra.alquranapp.utils.AuthManager
 import com.ismaindra.alquranapp.R
-import androidx.navigation.NavOptions
 import androidx.navigation.navOptions
 
 class ProfileFragment : Fragment() {
@@ -41,34 +41,50 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.loadUserData()
 
-        // Tampilkan nama user
         viewModel.userName.observe(viewLifecycleOwner) { name ->
-            binding.tvName.text = name ?: "Nama Tidak Tersedia"
+            binding.tvName.text = name ?: "-"
+            Log.d("ProfileFragment", "User name loaded: $name")
         }
 
-        // Tampilkan email user
         viewModel.userEmail.observe(viewLifecycleOwner) { email ->
-            binding.tvEmail.text = email ?: "email@contoh.com"
+            binding.tvEmail.text = email ?: "-"
             binding.tvInfoEmail.text = "Email: ${email ?: "-"}"
+            Log.d("ProfileFragment", "User email loaded: $email")
         }
 
-        // Tombol Logout
         binding.btnLogout.setOnClickListener {
             viewModel.logout()
 
-            Toast.makeText(requireContext(), "Berhasil keluar", Toast.LENGTH_SHORT).show()
-
-            findNavController().navigate(
-                R.id.homeFragment,
-                null,
-                navOptions {
-                    popUpTo(R.id.homeFragment) {
-                        inclusive = false
+            Toast.makeText(
+                requireContext(),
+                "Berhasil logout",
+                Toast.LENGTH_SHORT
+            ).show()
+            try {
+                findNavController().navigate(
+                    R.id.loginFragment,
+                    null,
+                    navOptions {
+                        popUpTo(R.id.nav_graph) { // Clear semua back stack
+                            inclusive = true
+                        }
+                        launchSingleTop = true
                     }
-                    launchSingleTop = true
+                )
+            } catch (e: Exception) {
+                Log.e("ProfileFragment", "Navigation error: ${e.message}", e)
+
+                // Fallback: Restart activity
+                activity?.let { act ->
+                    val intent = act.intent
+                    intent.addFlags(android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                    act.finish()
+                    startActivity(intent)
                 }
-            )
+            }
         }
     }
 

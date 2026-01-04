@@ -1,6 +1,5 @@
 package com.ismaindra.alquranapp.data.model
 
-// LoginRequest.kt
 data class LoginRequest(
     val email: String,
     val password: String
@@ -33,4 +32,3 @@ data class UserData(
     val updated_at: String?
 )
 
-// AuthData tidak diperlukan lagi karena struktur berbeda

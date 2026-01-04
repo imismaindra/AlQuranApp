@@ -27,7 +27,7 @@ class HomeViewModel(private val api: ApiService,private val authManager: AuthMan
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value =null
-            _userName.value = "Assalamualaikaum, "+authManager.getUserName()
+            _userName.value = "Assalamualaikum, ${authManager.getUserName() ?: "Sahabat"}"
 
             try {
                 val response = api.getRandomDoa()

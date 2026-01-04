@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:background="@color/background_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        >
+
+        <!-- Header: Jenis & Nomor -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp"
+            >
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="6dp"
+                app:cardBackgroundColor="@color/primary_green"
+                app:cardElevation="0dp">
+
+                <TextView
+                    android:id="@+id/tv_jenis_hadist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Arbain"
+                    android:textSize="10sp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    tools:ignore="SmallSp" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/tv_no_hadist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No. 32"
+                android:textSize="11sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+        <!-- Judul Hadist -->
+        <TextView
+            android:id="@+id/tv_judul_hadist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Larangan Membahayakan Diri dan Orang Lain"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Teks Arab -->
+        <TextView
+            android:id="@+id/tv_arab_hadist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="عنْ أَبِيْ سَعِيْدٍ سَعْدِ بنِ مَالِكٍ بْنِ سِنَانٍ الخُدْرِيِّ رضي الله عنه أَنَّ رَسُولَ اللهِ صلى الله عليه وسلم قَالَ"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:lineSpacingExtra="6dp"
+            android:textAlignment="textEnd"
+            android:fontFamily="serif"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Terjemahan Indonesia -->
+        <TextView
+            android:id="@+id/tv_indo_hadist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dari Abu Said Sa'ad bin Malik bin Sinan Al Khudry radhiyallahu 'anhu, bahwa Rasulullah shallallahu 'alaihi wa sallam bersabda..."
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:lineSpacingExtra="4dp"
+            android:maxLines="4"
+            android:ellipsize="end" />
+
+        <!-- Footer: Baca Selengkapnya -->
+        <TextView
+            android:id="@+id/tv_baca_selengkapnya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Baca Selengkapnya →"
+            android:textSize="12sp"
+            android:textColor="@color/primary_green"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

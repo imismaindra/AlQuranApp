@@ -60,7 +60,7 @@ class LoginFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                // Navigate ke profile setelah login sukses
+//                 Navigate ke profile setelah login sukses
                 try {
                     findNavController().navigate(
                         R.id.profileFragment,

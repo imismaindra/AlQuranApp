@@ -64,16 +64,20 @@
         suspend fun addBookmark(
             @Header("Authorization") token: String,
             @Body request: BookmarkRequest
-        ): Response<BookmarkResponse>
+        ): Response<AddBookmarkResponse>
 
         @DELETE("bookmark/{id}")
         suspend fun deleteBookmark(
             @Header("Authorization") token: String,
             @Path("id") bookmarkId: Int
-        ): Response<BookmarkResponse>
+        ): Response<GeneralResponse>
 
         @DELETE("bookmark")
         suspend fun clearAllBookmarks(
             @Header("Authorization") token: String
         ): Response<BookmarkResponse>
+    }
+    interface HadistsApiService {
+        @GET("hadist/acak")
+        suspend fun getRandomHadist(): Response<HadistResponse>
     }
