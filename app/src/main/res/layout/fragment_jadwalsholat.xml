@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F5F5F5">
+    android:background="@drawable/islamic_pattern_background">
 
     <LinearLayout
         android:id="@+id/rootJadwal"
@@ -14,96 +14,144 @@
         android:orientation="vertical">
 
         <!-- HEADER WITH GRADIENT -->
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="32dp"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="24dp"
             android:background="@drawable/header_gradient"
             android:elevation="4dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                android:src="@drawable/bg_islamic_pattern"
+                android:alpha="0.08"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:orientation="vertical"
+                android:paddingTop="32dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="26dp">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_location"
-                    android:tint="@android:color/white"
-                    android:layout_marginEnd="8dp"/>
-
-                <TextView
-                    android:id="@+id/tvLokasi"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Surabaya, Jawa Timur"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:alpha="0.9"
-                    android:clickable="true"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                <ImageView
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/ic_chevron_down"
-                    android:tint="@android:color/white"
-                    android:alpha="0.8"/>
-            </LinearLayout>
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_kaaba"
+                        android:tint="@android:color/white"
+                        android:layout_marginEnd="8dp" />
 
-            <TextView
-                android:id="@+id/tvNextPrayer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ashar"
-                android:textColor="@android:color/white"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.02"
-                android:layout_marginTop="20dp" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
 
-            <TextView
-                android:id="@+id/tvNextPrayerTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="16:16 WIB"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:alpha="0.95"
-                android:layout_marginTop="4dp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Jadwal Sholat"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_countdown"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp">
+                        <TextView
+                            android:id="@+id/tvLokasi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Surabaya, Jawa Timur"
+                            android:textColor="@android:color/white"
+                            android:textSize="13sp"
+                            android:alpha="0.9"
+                            android:clickable="true" />
+                    </LinearLayout>
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:src="@drawable/ic_clock"
-                    android:tint="@android:color/white"
-                    android:layout_marginEnd="6dp"/>
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_chevron_down"
+                        android:tint="@android:color/white"
+                        android:alpha="0.9" />
+                </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvCountdown"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="2 jam 34 menit lagi"
-                    android:textColor="@android:color/white"
-                    android:textSize="13sp" />
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvNextPrayer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ashar"
+                            android:textColor="@android:color/white"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.02" />
+
+                        <TextView
+                            android:id="@+id/tvNextPrayerTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="16:16 WIB"
+                            android:textColor="@android:color/white"
+                            android:textSize="20sp"
+                            android:alpha="0.95"
+                            android:layout_marginTop="2dp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/bg_countdown"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_clock"
+                                android:tint="@android:color/white"
+                                android:layout_marginEnd="6dp" />
+
+                            <TextView
+                                android:id="@+id/tvCountdown"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2 jam 34 menit lagi"
+                                android:textColor="@android:color/white"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:src="@drawable/ic_shalawat"
+                        android:tint="@android:color/white"
+                        android:alpha="0.35"
+                        android:padding="12dp" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </FrameLayout>
 
         <!-- SEARCH WITH CARD STYLE -->
         <androidx.cardview.widget.CardView
@@ -112,35 +160,49 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="-24dp"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="14dp"
             app:cardElevation="8dp"
             app:cardBackgroundColor="@android:color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:orientation="vertical"
                 android:padding="14dp">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_search"
-                    android:tint="#9E9E9E"
-                    android:layout_marginEnd="12dp"/>
-
-                <EditText
-                    android:id="@+id/etSearchKota"
-                    android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Cari kota atau wilayah"
-                    android:textColorHint="#9E9E9E"
-                    android:textColor="#212121"
-                    android:textSize="15sp"
-                    android:background="@null"
-                    android:inputType="text" />
+                    android:text="Pilih lokasi untuk jadwal sholat yang akurat"
+                    android:textColor="#607D8B"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_search"
+                        android:tint="#9E9E9E"
+                        android:layout_marginEnd="12dp" />
+
+                    <EditText
+                        android:id="@+id/etSearchKota"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Cari kota atau wilayah"
+                        android:textColorHint="#9E9E9E"
+                        android:textColor="#212121"
+                        android:textSize="15sp"
+                        android:background="@null"
+                        android:inputType="text" />
+                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -160,14 +222,28 @@
                 android:paddingEnd="20dp"
                 android:paddingBottom="12dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Jadwal Hari Ini"
-                    android:textColor="#212121"
-                    android:textStyle="bold"
-                    android:textSize="18sp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jadwal Hari Ini"
+                        android:textColor="#212121"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tetapkan niat, jaga tepat waktu"
+                        android:textColor="#78909C"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvTanggalHariIni"
@@ -183,8 +259,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
                 app:cardBackgroundColor="@android:color/white">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -192,7 +268,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:paddingVertical="8dp" />
+                    android:paddingVertical="8dp"
+                    android:paddingBottom="4dp" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
@@ -213,14 +290,28 @@
                 android:paddingEnd="20dp"
                 android:paddingBottom="12dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Jadwal Bulan Ini"
-                    android:textColor="#212121"
-                    android:textStyle="bold"
-                    android:textSize="18sp" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jadwal Bulan Ini"
+                        android:textColor="#212121"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pantau seluruh waktu sholat selama sebulan"
+                        android:textColor="#78909C"
+                        android:textSize="12sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvBulanTahun"

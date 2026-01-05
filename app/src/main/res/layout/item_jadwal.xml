@@ -4,23 +4,34 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:paddingVertical="16dp"
-    android:paddingHorizontal="20dp"
-    android:background="@drawable/ripple_effect">
+    android:paddingVertical="14dp"
+    android:paddingHorizontal="16dp"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    android:background="@drawable/prayer_item_background"
+    android:foreground="?attr/selectableItemBackground">
+
+    <View
+        android:id="@+id/stripAccent"
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/prayer_strip_background"
+        android:layout_marginEnd="12dp" />
 
     <LinearLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:id="@+id/containerIcon"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
         android:background="@drawable/bg_prayer_icon"
         android:gravity="center"
         android:layout_marginEnd="16dp">
 
         <ImageView
             android:id="@+id/ivPrayerIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:src="@drawable/ic_prayer"
-            android:tint="#FF7A00"/>
+            android:tint="#FF7A00" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,11 +54,10 @@
             android:id="@+id/tvKeterangan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fajar"
+            android:text="Waktu fajar menuju Subuh"
             android:textSize="12sp"
-            android:textColor="#9E9E9E"
-            android:layout_marginTop="2dp"
-            android:visibility="gone"/>
+            android:textColor="#607D8B"
+            android:layout_marginTop="2dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -73,7 +83,7 @@
             android:text="WIB"
             android:textSize="11sp"
             android:textColor="#9E9E9E"
-            android:layout_marginTop="2dp"/>
+            android:layout_marginTop="2dp" />
     </LinearLayout>
 
     <ImageView
@@ -85,6 +95,6 @@
         android:layout_marginStart="12dp"
         android:clickable="true"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="4dp"/>
+        android:padding="4dp" />
 
 </LinearLayout>

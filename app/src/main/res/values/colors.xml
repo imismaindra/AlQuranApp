@@ -46,4 +46,13 @@
 
     <!-- Status Bar Color -->
     <color name="status_bar">#1B5E20</color>
+
+    <!-- Prayer Accent Colors -->
+    <color name="imsak_accent">#C8E6C9</color>
+    <color name="subuh_accent">#A5D6A7</color>
+    <color name="dhuha_accent">#FFE082</color>
+    <color name="dzuhur_accent">#FFD54F</color>
+    <color name="ashar_accent">#FFCC80</color>
+    <color name="maghrib_accent">#FFB74D</color>
+    <color name="isya_accent">#C5CAE9</color>
 </resources>
