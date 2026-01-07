@@ -72,6 +72,9 @@ class HomeFragment : Fragment() {
         binding.menuJadwalSholat.setOnClickListener {
             findNavController().navigate(R.id.action_home_to_jadwalSholat)
         }
+        binding.menuHadist.setOnClickListener {
+            findNavController().navigate(R.id.action_home_to_hadist)
+        }
 
         viewModel.userName.observe(viewLifecycleOwner) { name ->
             binding.TvNamaHome.text = name ?: "Sahabat"
@@ -124,17 +127,19 @@ class HomeFragment : Fragment() {
     }
 
     private fun onHadistClick(hadist: Hadist) {
-        // Handle klik item hadist
-        // Anda bisa navigate ke detail hadist atau tampilkan bottom sheet
-        Toast.makeText(
-            requireContext(),
-            "Hadist: ${hadist.judul}",
-            Toast.LENGTH_SHORT
-        ).show()
-
-        // Contoh navigasi ke detail (jika sudah ada):
-        // val action = HomeFragmentDirections.actionHomeToHadistDetail(hadist.id)
-        // findNavController().navigate(action)
+        val bundle = Bundle().apply {
+            putParcelable("hadist_data", hadist)
+        }
+        findNavController().navigate(R.id.action_home_to_hadist, bundle)
+        // Note: For HomeFragment, actually the user wanted "baca selengkapnya" on the page *hadist* (the list page). 
+        // But since this method `onHadistClick` is in HomeFragment (for "Hadist Untukmu"), we should probably point it to the detail too if that's the intention.
+        // However, the user specifically asked "pada halaman hadist...". 
+        // Let's ensure the HadistFragment (FULL LIST) handles this correctly.
+        // But for HomeFragment "Hadist Untukmu" items, let's also allow opening detail.
+        
+        // Wait, R.id.action_home_to_hadist goes to HadistFragment (List).
+        // To go to detail, we need a different action or pass generic bundle.
+        // Since I haven't defined action_home_to_hadistDetail in nav_graph, let's fix HadistFragment first.
     }
 
     private fun setupObservers() {

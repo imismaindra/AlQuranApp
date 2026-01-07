@@ -80,4 +80,7 @@
     interface HadistsApiService {
         @GET("hadist/acak")
         suspend fun getRandomHadist(): Response<HadistResponse>
+
+        @GET("hadist")
+        suspend fun getAllHadist(): Response<HadistResponse>
     }

@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_home_to_jadwalSholat"
             app:destination="@id/jadwalSholatFragment" />
+        <action
+            android:id="@+id/action_home_to_hadist"
+            app:destination="@id/hadistFragment" />
     </fragment>
 
     <fragment
@@ -92,5 +95,21 @@
         android:name="com.ismaindra.alquranapp.ui.jadwalSholat.JadwalSholatFragment"
         android:label="Jadwal Sholat"
         tools:layout="@layout/fragment_jadwalsholat" />
+
+    <fragment
+        android:id="@+id/hadistFragment"
+        android:name="com.ismaindra.alquranapp.ui.hadist.HadistFragment"
+        android:label="Hadist"
+        tools:layout="@layout/fragment_hadist">
+        <action
+            android:id="@+id/action_hadistFragment_to_hadistDetailFragment"
+            app:destination="@id/hadistDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hadistDetailFragment"
+        android:name="com.ismaindra.alquranapp.ui.hadist.HadistDetailFragment"
+        android:label="Detail Hadist"
+        tools:layout="@layout/fragment_hadist_detail" />
 
 </navigation>
