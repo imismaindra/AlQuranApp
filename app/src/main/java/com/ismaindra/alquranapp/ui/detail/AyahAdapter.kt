@@ -136,6 +136,7 @@ class AyahAdapter(
             val surahName = activity?.intent?.getStringExtra(SurahDetailActivity.EXTRA_SURAH_NAME) ?: ""
 
             val bookmark = BookmarkItem(
+
                 surahNumber = surahNumber,
                 surahName = surahName,
                 ayahNumber = ayat.nomor ?: 0,

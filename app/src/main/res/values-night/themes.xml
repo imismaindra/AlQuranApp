@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.MyApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">@font/poppins</item>
+    </style>
 <!--    &lt;!&ndash; Base application theme (Dark Mode). &ndash;&gt;-->
 <!--    <style name="Theme.AlQuranApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">-->
 <!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->

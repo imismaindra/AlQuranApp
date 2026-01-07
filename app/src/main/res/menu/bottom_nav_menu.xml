@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_home"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/ic_berandas"
         android:title="Beranda"/>
 
     <item
         android:id="@+id/nav_surah"
-        android:icon="@drawable/ic_quran"
+        android:icon="@drawable/ic_qurans"
         android:title="Surah"/>
 
     <item
