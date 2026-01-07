@@ -200,27 +200,28 @@ class HomeFragment : Fragment() {
         val task = client.checkLocationSettings(builder.build())
 
         task.addOnSuccessListener {
-            // PERBAIKAN: Cek apakah fragment masih attached sebelum melanjutkan
             if (isAdded && context != null) {
                 getUserLocation()
             }
         }
 
         task.addOnFailureListener { e ->
-            // PERBAIKAN: Cek apakah fragment masih attached
-            if (isAdded && e is ResolvableApiException) {
-                try {
-                    e.startResolutionForResult(requireActivity(), 1001)
-                } catch (_: IntentSender.SendIntentException) {}
+            if (isAdded) {
+                if (e is ResolvableApiException) {
+                    try {
+                        e.startResolutionForResult(requireActivity(), 1001)
+                    } catch (_: IntentSender.SendIntentException) {
+                        useDefaultLocation()
+                    }
+                } else {
+                    useDefaultLocation()
+                }
             }
         }
     }
 
     private fun getUserLocation() {
-        // PERBAIKAN: Cek lagi apakah fragment masih attached
-        if (!isAdded || context == null) {
-            return
-        }
+        if (!isAdded || context == null) return
 
         val fine = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
         val coarse = ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -231,92 +232,73 @@ class HomeFragment : Fragment() {
         }
 
         fusedLocation.lastLocation.addOnSuccessListener { last ->
-            // PERBAIKAN: Cek apakah fragment masih attached sebelum mengakses binding
-            if (!isAdded || context == null || _binding == null) {
-                return@addOnSuccessListener
-            }
+            if (!isAdded || context == null || _binding == null) return@addOnSuccessListener
 
             if (last != null) {
                 getAddressInfo(last.latitude, last.longitude)
             } else {
                 fusedLocation.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
                     .addOnSuccessListener { current ->
-                        // PERBAIKAN: Cek lagi untuk callback nested
-                        if (!isAdded || context == null || _binding == null) {
-                            return@addOnSuccessListener
-                        }
+                        if (!isAdded || context == null || _binding == null) return@addOnSuccessListener
 
                         if (current != null) {
                             getAddressInfo(current.latitude, current.longitude)
                         } else {
-                            binding.tvDate.text = "Lokasi tidak ditemukan"
+                            useDefaultLocation()
                         }
                     }
+                    .addOnFailureListener {
+                        useDefaultLocation()
+                    }
             }
+        }.addOnFailureListener {
+            useDefaultLocation()
         }
     }
 
     private fun getAddressInfo(lat: Double, lon: Double) {
-        // PERBAIKAN: Cek apakah fragment masih attached
-        if (!isAdded || context == null) {
-            return
-        }
+        if (!isAdded || context == null) return
 
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
 
         val handler: (List<Address>?) -> Unit = handler@{ list ->
-            // PERBAIKAN: Cek apakah fragment masih attached sebelum update UI
-            if (!isAdded || context == null || _binding == null) {
-                return@handler
-            }
+            if (!isAdded || context == null || _binding == null) return@handler
 
             val addr = list?.firstOrNull()
-            val city = if (addr != null) extractCity(addr) else "Tidak diketahui"
-
-            binding.tvDate.text = "$city, ${getTodayDate()}"
-
-            fetchCityId(city) { id ->
-                if (id != null) {
-                    fetchJadwal(id) { jadwal ->
-                        if (jadwal != null) {
-                            val next = getNextSholat(jadwal)
-
-                            if (next != null) {
-                                nextName = next.first
-                                nextTimeMillis = System.currentTimeMillis() + next.second
-                                startCountdown()
-
-                                val namesMap = mapOf(
-                                    "subuh" to "Subuh",
-                                    "dzuhur" to "Dzuhur",
-                                    "ashar" to "Ashar",
-                                    "maghrib" to "Maghrib",
-                                    "isya" to "Isya"
-                                )
-
-                                val displayName =
-                                    namesMap[nextName] ?: nextName?.replaceFirstChar { it.uppercase() }
-
-                                binding.tvPrayerName.text =
-                                    "$displayName ${jadwal.getString(nextName)} WIB"
+            if (addr != null) {
+                val city = extractCity(addr)
+                binding.tvDate.text = "$city, ${getTodayDate()}"
+                fetchCityId(city) { id ->
+                    if (id != null) {
+                        fetchJadwal(id) { jadwal ->
+                            if (jadwal != null) {
+                                processJadwal(jadwal)
+                            } else {
+                                useDefaultLocation()
                             }
                         }
+                    } else {
+                        useDefaultLocation()
                     }
                 }
+            } else {
+                useDefaultLocation()
             }
         }
 
         if (Build.VERSION.SDK_INT >= 33) {
-            geocoder.getFromLocation(lat, lon, 1) { handler(it) }
+            try {
+                geocoder.getFromLocation(lat, lon, 1) { handler(it) }
+            } catch (e: Exception) {
+                useDefaultLocation()
+            }
         } else {
-            // PERBAIKAN: Gunakan lifecycleScope instead of manual scope
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val list = try {
                     geocoder.getFromLocation(lat, lon, 1)
                 } catch (_: Exception) {
                     null
                 }
-
                 withContext(Dispatchers.Main) {
                     handler(list)
                 }
@@ -324,16 +306,28 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun useDefaultLocation() {
+        if (!isAdded || context == null || _binding == null) return
+        
+        // Prevent multiple calls if already showing data
+        if (binding.tvDate.text.contains("Jakarta")) return
+
+        binding.tvDate.text = "Jakarta, ${getTodayDate()}"
+        
+        // ID Jakarta = 1301
+        fetchJadwal("1301") { jadwal ->
+            if (jadwal != null) {
+                processJadwal(jadwal)
+            }
+        }
+    }
+
     private fun startCountdown() {
         countdownJob?.cancel()
 
-        // PERBAIKAN: Gunakan lifecycleScope instead of manual scope
         countdownJob = viewLifecycleOwner.lifecycleScope.launch {
             while (isActive) {
-                // PERBAIKAN: Cek apakah binding masih ada
-                if (_binding == null || !isAdded) {
-                    break
-                }
+                if (_binding == null || !isAdded) break
 
                 if (nextName != null && nextTimeMillis != null) {
                     val remaining = nextTimeMillis!! - System.currentTimeMillis()
@@ -348,10 +342,30 @@ class HomeFragment : Fragment() {
                     val seconds = (remaining / 1000) % 60
 
                     binding.tvPrayerCountdown.text =
-                        String.format("%02d:%02d:%02d Menjelang Azan", hours, minutes, seconds)
+                        String.format("%02d : %02d : %02d", hours, minutes, seconds)
                 }
                 delay(1000)
             }
+        }
+    }
+
+    private fun processJadwal(jadwal: JSONObject) {
+        val next = getNextSholat(jadwal)
+        if (next != null) {
+            nextName = next.first
+            nextTimeMillis = System.currentTimeMillis() + next.second
+            startCountdown()
+
+            val namesMap = mapOf(
+                "subuh" to "Subuh",
+                "dzuhur" to "Dzuhur",
+                "ashar" to "Ashar",
+                "maghrib" to "Maghrib",
+                "isya" to "Isya"
+            )
+
+            val displayName = namesMap[nextName] ?: nextName?.replaceFirstChar { it.uppercase() }
+            binding.tvPrayerName.text = displayName
         }
     }
 
@@ -376,20 +390,23 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchCityId(city: String, callback: (String?) -> Unit) {
-        // PERBAIKAN: Gunakan lifecycleScope
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val url = "https://api.myquran.com/v2/sholat/kota/cari/${city.lowercase()}"
                 val response = URL(url).readText()
                 val json = JSONObject(response)
-                val id = json.getJSONArray("data").getJSONObject(0).getString("id")
-
-                withContext(Dispatchers.Main) {
-                    // PERBAIKAN: Cek apakah fragment masih attached
-                    if (isAdded && context != null) {
-                        callback(id)
-                    }
+                // Check status first
+                if (json.has("status") && json.getBoolean("status")) {
+                     val data = json.getJSONArray("data")
+                     if (data.length() > 0) {
+                         val id = data.getJSONObject(0).getString("id")
+                         withContext(Dispatchers.Main) {
+                             if (isAdded && context != null) callback(id)
+                         }
+                         return@launch
+                     }
                 }
+                withContext(Dispatchers.Main) { callback(null) }
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -404,21 +421,21 @@ class HomeFragment : Fragment() {
     private fun fetchJadwal(id: String, callback: (JSONObject?) -> Unit) {
         val today = SimpleDateFormat("yyyy-MM-dd", Locale("id", "ID")).format(Date())
 
-        // PERBAIKAN: Gunakan lifecycleScope
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val url = "https://api.myquran.com/v2/sholat/jadwal/$id/$today"
                 val response = URL(url).readText()
                 val json = JSONObject(response)
-                val jadwal = json.getJSONObject("data").getJSONObject("jadwal")
-
-                withContext(Dispatchers.Main) {
-                    // PERBAIKAN: Cek apakah fragment masih attached
-                    if (isAdded && context != null && _binding != null) {
-                        callback(jadwal)
+                 if (json.has("status") && json.getBoolean("status")) {
+                    val jadwal = json.getJSONObject("data").getJSONObject("jadwal")
+                    withContext(Dispatchers.Main) {
+                        if (isAdded && context != null && _binding != null) {
+                            callback(jadwal)
+                        }
                     }
-                }
-
+                 } else {
+                     withContext(Dispatchers.Main) { callback(null) }
+                 }
             } catch (_: Exception) {
                 withContext(Dispatchers.Main) {
                     if (isAdded && context != null) {
