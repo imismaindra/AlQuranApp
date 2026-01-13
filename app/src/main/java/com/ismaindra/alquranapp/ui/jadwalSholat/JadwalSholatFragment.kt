@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +24,8 @@ import com.ismaindra.alquranapp.R
 import com.ismaindra.alquranapp.data.api.ExsternalRetrofitClient
 import com.ismaindra.alquranapp.data.model.Kota
 import com.ismaindra.alquranapp.data.repository.SholatRepository
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 
 class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
@@ -36,8 +39,11 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
     private lateinit var rvBulanan: RecyclerView
     private lateinit var tvLokasi: TextView
     private lateinit var tvNextPrayer: TextView
+    private lateinit var tvNextPrayerTime: TextView
     private lateinit var tvCountdown: TextView
     private lateinit var etSearchKota: EditText
+    private lateinit var headerContainer: LinearLayout
+
     private val jadwalAdapter = JadwalAdapter()
     private val bulananAdapter = JadwalBulananAdapter()
 
@@ -68,7 +74,7 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
         setupRecycler()
         observeViewModel()
         setupSearch()
-        setupClick() // FIX: Tambahkan ini
+        setupClick()
         checkLocationPermission()
     }
 
@@ -77,8 +83,10 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
         rvBulanan = view.findViewById(R.id.rvJadwalBulanan)
         tvLokasi = view.findViewById(R.id.tvLokasi)
         tvNextPrayer = view.findViewById(R.id.tvNextPrayer)
+        tvNextPrayerTime = view.findViewById(R.id.tvNextPrayerTime)
         tvCountdown = view.findViewById(R.id.tvCountdown)
         etSearchKota = view.findViewById(R.id.etSearchKota)
+        headerContainer = view.findViewById(R.id.headerContainer)
     }
 
     private fun setupSearch() {
@@ -89,7 +97,6 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
                 if (query.length >= 3) {
                     viewModel.searchKota(query)
                 } else if (query.isEmpty()) {
-                    // Kosongkan hasil search saat field kosong
                     viewModel.clearSearch()
                 }
             }
@@ -108,6 +115,9 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
     private fun observeViewModel() {
         viewModel.jadwal.observe(viewLifecycleOwner) {
             jadwalAdapter.submit(it)
+            if (it != null) {
+                updateUIWithJadwal(it)
+            }
         }
 
         viewModel.jadwalBulanan.observe(viewLifecycleOwner) {
@@ -120,13 +130,11 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
             }
         }
 
-        // Observer untuk hasil search (tampilkan di bottom sheet)
         viewModel.searchResults.observe(viewLifecycleOwner) { results ->
             if (!results.isNullOrEmpty()) {
-                // Tampilkan hasil search dalam bottom sheet
                 PilihKotaBottomSheet(results) { kota ->
                     viewModel.selectKota(kota)
-                    etSearchKota.text.clear() // Clear search setelah pilih
+                    etSearchKota.text.clear()
                 }.show(parentFragmentManager, "search_results")
             }
         }
@@ -134,18 +142,15 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
 
     private fun setupClick() {
         tvLokasi.setOnClickListener {
-            // Muat semua kota untuk bottom sheet
             viewModel.loadAllKota()
             Toast.makeText(requireContext(), "Memuat daftar kota...", Toast.LENGTH_SHORT).show()
 
-            // Observe kotaList untuk bottom sheet pemilihan manual
             viewModel.kotaList.observe(viewLifecycleOwner, object : androidx.lifecycle.Observer<List<Kota>> {
                 override fun onChanged(list: List<Kota>) {
                     if (!list.isNullOrEmpty()) {
                         PilihKotaBottomSheet(list) { kota ->
                             viewModel.selectKota(kota)
                         }.show(parentFragmentManager, "kota")
-
                         viewModel.kotaList.removeObserver(this)
                     }
                 }
@@ -170,6 +175,115 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
         }
     }
 
+    private fun updateUIWithJadwal(jadwal: com.ismaindra.alquranapp.data.model.Jadwal) {
+        try {
+            val now = Calendar.getInstance()
+            val currentMinutes = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE)
+
+            // Parse time "HH:mm" to minutes
+            fun toMinutes(time: String): Int {
+                return try {
+                    val split = time.split(":")
+                    if (split.size >= 2) {
+                        split[0].toInt() * 60 + split[1].toInt()
+                    } else 0
+                } catch (e: Exception) {
+                    0
+                }
+            }
+
+            val subuh = toMinutes(jadwal.subuh)
+            val dhuha = toMinutes(jadwal.dhuha)
+            val dzuhur = toMinutes(jadwal.dzuhur)
+            val ashar = toMinutes(jadwal.ashar)
+            val maghrib = toMinutes(jadwal.maghrib)
+            val isya = toMinutes(jadwal.isya)
+
+            var nextPrayerName = ""
+            var nextPrayerTimeStr = ""
+            var nextPrayerMinutes = 0
+            val bgDrawable: Int
+
+            when {
+                currentMinutes < subuh -> {
+                    // Sebelum Subuh (Dini Hari) -> Tema Isya (Gelap/Malam)
+                    bgDrawable = R.drawable.header_isya
+                    nextPrayerName = "Subuh"
+                    nextPrayerTimeStr = jadwal.subuh
+                    nextPrayerMinutes = subuh
+                }
+                currentMinutes < dhuha -> {
+                    // Subuh - Dhuha -> Tema Subuh (Fajar)
+                    bgDrawable = R.drawable.header_subuh
+                    nextPrayerName = "Dhuha"
+                    nextPrayerTimeStr = jadwal.dhuha
+                    nextPrayerMinutes = dhuha
+                }
+                currentMinutes < dzuhur -> {
+                    // Dhuha - Dzuhur -> Tema Dzuhur (Siang Terang)
+                    bgDrawable = R.drawable.header_dzuhur
+                    nextPrayerName = "Dzuhur"
+                    nextPrayerTimeStr = jadwal.dzuhur
+                    nextPrayerMinutes = dzuhur
+                }
+                currentMinutes < ashar -> {
+                    // Dzuhur - Ashar -> Tema Dzuhur
+                    bgDrawable = R.drawable.header_dzuhur
+                    nextPrayerName = "Ashar"
+                    nextPrayerTimeStr = jadwal.ashar
+                    nextPrayerMinutes = ashar
+                }
+                currentMinutes < maghrib -> {
+                    // Ashar - Maghrib -> Tema Ashar (Sore)
+                    bgDrawable = R.drawable.header_ashar
+                    nextPrayerName = "Maghrib"
+                    nextPrayerTimeStr = jadwal.maghrib
+                    nextPrayerMinutes = maghrib
+                }
+                currentMinutes < isya -> {
+                    // Maghrib - Isya -> Tema Maghrib (Senja)
+                    bgDrawable = R.drawable.header_maghrib
+                    nextPrayerName = "Isya"
+                    nextPrayerTimeStr = jadwal.isya
+                    nextPrayerMinutes = isya
+                }
+                else -> {
+                    // Setelah Isya -> Tema Isya (Malam)
+                    bgDrawable = R.drawable.header_isya
+                    nextPrayerName = "Subuh"
+                    nextPrayerTimeStr = jadwal.subuh
+                    nextPrayerMinutes = subuh + (24 * 60) // Subuh besok (+24 jam)
+                }
+            }
+
+            // Terapkan Tema
+            headerContainer.setBackgroundResource(bgDrawable)
+            setNextPrayerInfo(nextPrayerName, nextPrayerTimeStr)
+
+            // Hitung Countdown
+            val diffMinutes = nextPrayerMinutes - currentMinutes
+            val hours = diffMinutes / 60
+            val minutes = diffMinutes % 60
+            
+            val countdownText = if (hours > 0) {
+                "$hours jam $minutes menit lagi"
+            } else {
+                "$minutes menit lagi"
+            }
+            tvCountdown.text = countdownText
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Fallback jika terjadi error parsing waktu
+            headerContainer.setBackgroundResource(R.drawable.header_gradient)
+        }
+    }
+
+    private fun setNextPrayerInfo(name: String, time: String) {
+        tvNextPrayer.text = name
+        tvNextPrayerTime.text = "$time WIB"
+    }
+
     private fun getDeviceLocation() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -186,6 +300,7 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
 
             val geo = Geocoder(requireContext(), Locale("id", "ID"))
             try {
+                // Gunakan scope coroutine atau thread background sebaiknya, tapi Geocoder sering ok di main thread utk test simple
                 val addresses = geo.getFromLocation(loc.latitude, loc.longitude, 1)
                 val city = addresses?.firstOrNull()?.subAdminArea ?: addresses?.firstOrNull()?.adminArea
 
@@ -193,7 +308,6 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
                     loadDefaultLocation()
                 } else {
                     val keyword = city.replace("Kota ", "").replace("Kabupaten ", "")
-                    Toast.makeText(requireContext(), "Mencari lokasi: $city", Toast.LENGTH_SHORT).show()
                     viewModel.searchCityByLocation(keyword)
                 }
             } catch (e: Exception) {

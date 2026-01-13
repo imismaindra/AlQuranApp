@@ -11,337 +11,280 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="24dp"
-        android:paddingEnd="24dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="32dp"
-        android:background="@drawable/islamic_pattern_background"
         tools:context=".ui.register.RegisterFragment">
 
-        <!-- Top Spacer for vertical centering -->
-        <Space
-            android:id="@+id/top_spacer"
+        <!-- Modern Curved Header -->
+        <View
+            android:id="@+id/header_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="320dp"
+            android:background="@drawable/header_gradient"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/iv_logo"
-            app:layout_constraintVertical_weight="0.5"/>
-
-        <!-- Logo Container with Islamic Design -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/logo_card"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            app:cardCornerRadius="45dp"
-            app:cardElevation="10dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintTop_toBottomOf="@id/top_spacer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/gradient_islamic">
+        <ImageView
+            android:id="@+id/iv_header_curve"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/bg_header_curve"
+            app:tint="@color/background_light"
+            android:scaleType="fitXY"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/header_view"/>
 
-                <!-- Decorative Islamic Border -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="6dp"
-                    android:background="@drawable/circle_border"/>
+        <!-- Logo & Title inside Header -->
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_quran"
+            app:tint="@android:color/white"
+            android:layout_marginTop="50dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-                <ImageView
-                    android:id="@+id/iv_logo"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_quran"
-                    app:tint="@android:color/white" />
-            </FrameLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Title Section with Islamic Greeting -->
         <TextView
-            android:id="@+id/tv_bismillah"
-            android:layout_width="0dp"
+            android:id="@+id/tv_greeting_arab"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ"
-            android:textSize="16sp"
-            android:textColor="#2E7D32"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
             android:fontFamily="serif"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/logo_card"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/tv_title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Daftar Akun Baru"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:textColor="#1B5E20"
-            android:gravity="center"
-            android:letterSpacing="0.01"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_bismillah"
+            android:textSize="22sp"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="4dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_greeting_arab"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/tv_subtitle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bergabunglah untuk membaca Al-Qur'an"
-            android:textSize="14sp"
-            android:textColor="#558B2F"
-            android:gravity="center"
-            android:layout_marginTop="6dp"
+            android:textSize="13sp"
+            android:fontFamily="@font/poppins_medium"
+            android:textColor="#E0E0E0"
+            android:layout_marginTop="2dp"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <!-- Form Section with Islamic Style -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+        <!-- Overlapping Form Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:hint="Nama Lengkap"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxStrokeWidth="2dp"
-            app:boxStrokeColor="@color/input_stroke_color"
-            app:hintTextColor="#2E7D32"
-            app:startIconDrawable="@android:drawable/ic_menu_myplaces"
-            app:startIconTint="#2E7D32"
-            app:endIconMode="clear_text"
-            app:endIconTint="#2E7D32"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="@android:color/white"
             app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_name"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:textSize="16sp"
-                android:textColor="#1A1A1A"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:padding="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_email"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Alamat Email"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxStrokeWidth="2dp"
-            app:boxStrokeColor="@color/input_stroke_color"
-            app:hintTextColor="#2E7D32"
-            app:startIconDrawable="@android:drawable/ic_dialog_email"
-            app:startIconTint="#2E7D32"
-            app:endIconMode="clear_text"
-            app:endIconTint="#2E7D32"
-            app:layout_constraintTop_toBottomOf="@id/til_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nama Lengkap"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/ic_menu_myplaces"
+                    app:startIconTint="#2E7D32"
+                    android:layout_marginBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:textSize="16sp"
-                android:textColor="#1A1A1A"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName"
+                        android:fontFamily="@font/poppins_medium"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_password"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Kata Sandi"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxStrokeWidth="2dp"
-            app:boxStrokeColor="@color/input_stroke_color"
-            app:hintTextColor="#2E7D32"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="#2E7D32"
-            app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
-            app:startIconTint="#2E7D32"
-            app:helperText="Minimal 6 karakter"
-            app:helperTextTextColor="#558B2F"
-            app:layout_constraintTop_toBottomOf="@id/til_email"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_email"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Alamat Email"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/ic_dialog_email"
+                    app:startIconTint="#2E7D32"
+                    android:layout_marginBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:textSize="16sp"
-                android:textColor="#1A1A1A"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:fontFamily="@font/poppins_medium"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_confirm"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Konfirmasi Kata Sandi"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:boxStrokeWidth="2dp"
-            app:boxStrokeColor="@color/input_stroke_color"
-            app:hintTextColor="#2E7D32"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="#2E7D32"
-            app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
-            app:startIconTint="#2E7D32"
-            app:layout_constraintTop_toBottomOf="@id/til_password"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_password"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Kata Sandi"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
+                    app:startIconTint="#2E7D32"
+                    app:passwordToggleEnabled="true"
+                    app:helperText="Minimal 6 karakter"
+                    app:helperTextTextColor="#558B2F"
+                    android:layout_marginBottom="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_confirm_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:textSize="16sp"
-                android:textColor="#1A1A1A"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:fontFamily="@font/poppins_medium"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Terms and Conditions -->
-        <CheckBox
-            android:id="@+id/cb_terms"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Saya menyetujui Syarat dan Ketentuan"
-            android:textSize="13sp"
-            android:textColor="#424242"
-            android:buttonTint="#2E7D32"
-            android:layout_marginTop="20dp"
-            android:paddingStart="8dp"
-            app:layout_constraintTop_toBottomOf="@id/til_confirm"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_confirm"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Konfirmasi Kata Sandi"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
+                    app:startIconTint="#2E7D32"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginBottom="16dp">
 
-        <!-- Register Button with Islamic Green -->
-        <Button
-            android:id="@+id/btn_register"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:text="Daftar Sekarang"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textAllCaps="false"
-            android:background="@drawable/btn_islamic_green"
-            android:textColor="@android:color/white"
-            android:elevation="6dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/cb_terms"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        android:fontFamily="@font/poppins_medium"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Progress Bar -->
+                <CheckBox
+                    android:id="@+id/cb_terms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Saya menyetujui Syarat dan Ketentuan"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textColor="#424242"
+                    android:buttonTint="#2E7D32"
+                    android:layout_marginBottom="24dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_register"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:text="Daftar Sekarang"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textAllCaps="false"
+                    app:cornerRadius="12dp"
+                    app:backgroundTint="#2E7D32"
+                    android:layout_marginBottom="24dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="12dp">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="1dp"
+                        android:background="#E0E0E0"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="atau"
+                        android:paddingHorizontal="12dp"
+                        android:textColor="#9E9E9E"
+                        android:textSize="12sp"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="1dp"
+                        android:background="#E0E0E0"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Sudah punya akun?"
+                        android:textColor="#757575"
+                        android:fontFamily="@font/poppins_medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/tv_login"
+                        android:text="Masuk"
+                        android:textColor="#2E7D32"
+                        android:fontFamily="@font/poppins_bold"
+                        android:layout_marginStart="4dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <ProgressBar
             android:id="@+id/progress_bar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:visibility="gone"
-            android:indeterminateTint="#2E7D32"
-            android:elevation="8dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <!-- Decorative Islamic Ornament -->
-        <View
-            android:id="@+id/ornament_top"
-            android:layout_width="40dp"
-            android:layout_height="4dp"
-            android:background="@drawable/islamic_ornament"
-            android:layout_marginTop="28dp"
-            app:layout_constraintTop_toBottomOf="@id/btn_register"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_or"/>
-
-        <!-- Divider with OR -->
-        <TextView
-            android:id="@+id/tv_or"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="atau"
-            android:textSize="13sp"
-            android:textColor="#7CB342"
-            android:layout_marginTop="24dp"
-            app:layout_constraintTop_toBottomOf="@id/btn_register"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <View
-            android:id="@+id/ornament_bottom"
-            android:layout_width="40dp"
-            android:layout_height="4dp"
-            android:background="@drawable/islamic_ornament"
-            android:layout_marginTop="28dp"
-            app:layout_constraintTop_toBottomOf="@id/btn_register"
-            app:layout_constraintStart_toEndOf="@id/tv_or"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <!-- Login Link -->
-        <TextView
-            android:id="@+id/tv_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sudah punya akun? Masuk di sini"
-            android:textColor="#2E7D32"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_or"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-        <!-- Bottom Spacer for vertical centering -->
-        <Space
-            android:id="@+id/bottom_spacer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_login"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_weight="0.5"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:elevation="10dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </ScrollView>

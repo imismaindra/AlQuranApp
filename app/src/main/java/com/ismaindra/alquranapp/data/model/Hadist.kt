@@ -1,6 +1,8 @@
 package com.ismaindra.alquranapp.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class HadistResponse(
     @SerializedName("status")
@@ -11,6 +13,7 @@ data class HadistResponse(
     val data: List<Hadist>
 )
 
+@Parcelize
 data class Hadist(
     @SerializedName("id")
     val id: Int,
@@ -28,11 +31,12 @@ data class Hadist(
     val createdAt: String,
     @SerializedName("jenis")
     val jenis: JenisHadist
-)
+) : Parcelable
 
+@Parcelize
 data class JenisHadist(
     @SerializedName("id")
     val id: Int,
     @SerializedName("nama")
     val nama: String
-)
+) : Parcelable

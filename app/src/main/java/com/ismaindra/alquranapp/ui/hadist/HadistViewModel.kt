@@ -43,4 +43,29 @@ class HadistViewModel : ViewModel() {
             }
         }
     }
+
+    fun getAllHadist() {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                val response = RetrofitClient.hadistApi.getAllHadist()
+
+                if (response.isSuccessful) {
+                    response.body()?.let { hadistResponse ->
+                        if (hadistResponse.status) {
+                            _hadistList.value = hadistResponse.data
+                        } else {
+                            _errorMessage.value = hadistResponse.message
+                        }
+                    }
+                } else {
+                    _errorMessage.value = "Gagal memuat hadist: ${response.message()}"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
 }
