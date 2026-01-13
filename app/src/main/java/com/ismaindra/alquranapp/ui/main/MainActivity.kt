@@ -27,20 +27,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
         if (!authManager.isLoggedIn()) {
             val navHostFragment = supportFragmentManager
                 .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-
             val navController = navHostFragment.navController
 
-            val navOptions = androidx.navigation.NavOptions.Builder()
-                .setPopUpTo(R.id.nav_graph, true)
-                .build()
-
-            navController.navigate(R.id.loginFragment, null, navOptions)
-
-            binding.bottomNavigation.selectedItemId = R.id.nav_home
+            // Cek jika saat ini bukan di login atau register, maka tendang ke login
+            val currentDest = navController.currentDestination?.id
+            if (currentDest != R.id.loginFragment && currentDest != R.id.registerFragment) {
+                navController.navigate(R.id.loginFragment)
+            }
         }
     }
 
@@ -48,35 +44,9 @@ class MainActivity : AppCompatActivity() {
     private fun setupNavigation() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-
         val navController = navHostFragment.navController
 
+        // Sekarang ini akan bekerja karena ID Menu == ID NavGraph
         binding.bottomNavigation.setupWithNavController(navController)
-
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    navController.navigate(R.id.homeFragment)
-                    true
-                }
-                R.id.nav_surah -> {
-                    navController.navigate(R.id.surahListFragment)
-                    true
-                }
-                R.id.nav_bookmark -> {
-                    navController.navigate(R.id.bookmarkFragment)
-                    true
-                }
-                R.id.nav_users -> {
-                    if (authManager.isLoggedIn()) {
-                        navController.navigate(R.id.profileFragment)
-                    } else {
-                        navController.navigate(R.id.loginFragment)
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
     }
 }

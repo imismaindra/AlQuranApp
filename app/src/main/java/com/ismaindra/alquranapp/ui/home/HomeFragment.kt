@@ -32,6 +32,7 @@ import org.json.JSONObject
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.coroutines.resume
 
 class HomeFragment : Fragment() {
 
@@ -59,34 +60,29 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         fusedLocation = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        // Setup ViewModel untuk Hadist
         setupHadistViewModel()
-
-        // Navigasi ke doa
-        binding.menuDoaPage.setOnClickListener {
-            findNavController().navigate(R.id.action_home_to_doaList)
-        }
-        binding.menuJadwalSholat.setOnClickListener {
-            findNavController().navigate(R.id.action_home_to_jadwalSholat)
-        }
-        binding.menuHadist.setOnClickListener {
-            findNavController().navigate(R.id.action_home_to_hadist)
-        }
-
-        viewModel.userName.observe(viewLifecycleOwner) { name ->
-            binding.TvNamaHome.text = name ?: "Sahabat"
-        }
-
+        setupClickListeners()
         setupObservers()
         setupHadistObservers()
-        checkGPS()
-        viewModel.loadDoaAcak()
 
-        // Load hadist acak
+        // Mulai alur lokasi
+        checkGPS()
+
+        viewModel.loadDoaAcak()
         hadistViewModel.getRandomHadist()
+    }
+
+    private fun setupClickListeners() {
+        binding.menuDoaPage.setOnClickListener { findNavController().navigate(R.id.action_home_to_doaList) }
+        binding.menuJadwalSholat.setOnClickListener { findNavController().navigate(R.id.action_home_to_jadwalSholat) }
+        binding.menuHadist.setOnClickListener { findNavController().navigate(R.id.action_home_to_hadist) }
+    }
+    private fun safeUIUpdate(block: (FragmentHomeBinding) -> Unit) {
+        if (_binding != null && isAdded) {
+            block(binding)
+        }
     }
 
     private fun setupHadistViewModel() {
@@ -257,51 +253,36 @@ class HomeFragment : Fragment() {
     }
 
     private fun getAddressInfo(lat: Double, lon: Double) {
-        if (!isAdded || context == null) return
-
+        if (!isAdded) return
         val geocoder = Geocoder(requireContext(), Locale.getDefault())
 
-        val handler: (List<Address>?) -> Unit = handler@{ list ->
-            if (!isAdded || context == null || _binding == null) return@handler
+        // Gunakan LifecycleScope agar otomatis berhenti jika fragment dihancurkan
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val list = if (Build.VERSION.SDK_INT >= 33) {
+                    // Geocoder async untuk Android 13+
+                    suspendCancellableCoroutine { continuation ->
+                        geocoder.getFromLocation(lat, lon, 1) { continuation.resume(it) }
+                    }
+                } else {
+                    @Suppress("DEPRECATION")
+                    geocoder.getFromLocation(lat, lon, 1)
+                }
 
-            val addr = list?.firstOrNull()
-            if (addr != null) {
-                val city = extractCity(addr)
-                binding.tvDate.text = "$city, ${getTodayDate()}"
-                fetchCityId(city) { id ->
-                    if (id != null) {
-                        fetchJadwal(id) { jadwal ->
-                            if (jadwal != null) {
-                                processJadwal(jadwal)
-                            } else {
-                                useDefaultLocation()
-                            }
+                val addr = list?.firstOrNull()
+                withContext(Dispatchers.Main) {
+                    if (addr != null) {
+                        val city = extractCity(addr)
+                        safeUIUpdate {
+                            it.tvDate.text = "$city, ${getTodayDate()}"
+                            fetchCityId(city)
                         }
                     } else {
                         useDefaultLocation()
                     }
                 }
-            } else {
-                useDefaultLocation()
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= 33) {
-            try {
-                geocoder.getFromLocation(lat, lon, 1) { handler(it) }
             } catch (e: Exception) {
-                useDefaultLocation()
-            }
-        } else {
-            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                val list = try {
-                    geocoder.getFromLocation(lat, lon, 1)
-                } catch (_: Exception) {
-                    null
-                }
-                withContext(Dispatchers.Main) {
-                    handler(list)
-                }
+                withContext(Dispatchers.Main) { useDefaultLocation() }
             }
         }
     }
@@ -389,31 +370,39 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun fetchCityId(city: String, callback: (String?) -> Unit) {
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+    private fun fetchCityId(city: String) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) { // Tambahkan Dispatchers.IO
             try {
                 val url = "https://api.myquran.com/v2/sholat/kota/cari/${city.lowercase()}"
                 val response = URL(url).readText()
                 val json = JSONObject(response)
-                // Check status first
-                if (json.has("status") && json.getBoolean("status")) {
-                     val data = json.getJSONArray("data")
-                     if (data.length() > 0) {
-                         val id = data.getJSONObject(0).getString("id")
-                         withContext(Dispatchers.Main) {
-                             if (isAdded && context != null) callback(id)
-                         }
-                         return@launch
-                     }
-                }
-                withContext(Dispatchers.Main) { callback(null) }
 
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    if (isAdded && context != null) {
-                        callback(null)
+                if (json.getBoolean("status")) {
+                    val data = json.getJSONArray("data")
+                    if (data.length() > 0) {
+                        val id = data.getJSONObject(0).getString("id")
+                        withContext(Dispatchers.Main) {
+                            // 1. Pastikan Fragment masih aktif dan binding tidak null
+                            if (_binding != null && isAdded) {
+
+                                // 2. Panggil fetchJadwal untuk mendapatkan data jam sholat
+                                fetchJadwal(id) { jadwal ->
+
+                                    // 3. Jika data jadwal berhasil didapat (tidak null)
+                                    if (jadwal != null) {
+                                        // Jalankan fungsi untuk menentukan sholat berikutnya dan mulai hitung mundur
+                                        processJadwal(jadwal)
+                                    } else {
+                                        // Jika gagal, gunakan lokasi default (Jakarta) agar aplikasi tidak blank
+                                        useDefaultLocation()
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) { useDefaultLocation() }
             }
         }
     }

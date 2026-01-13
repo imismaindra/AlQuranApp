@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- ID diubah dari nav_home menjadi homeFragment sesuai nav_graph -->
     <item
-        android:id="@+id/nav_home"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/ic_berandas"
         android:title="Beranda"/>
 
     <item
-        android:id="@+id/nav_surah"
+        android:id="@+id/surahListFragment"
         android:icon="@drawable/ic_qurans"
         android:title="Surah"/>
 
     <item
-        android:id="@+id/nav_bookmark"
+        android:id="@+id/bookmarkFragment"
         android:icon="@drawable/ic_bookmark_border"
         android:title="Bookmark"/>
 
+    <!-- ID diubah dari nav_users menjadi profileFragment sesuai nav_graph -->
     <item
-        android:id="@+id/nav_users"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/ic_users"
         android:title="User"/>
 </menu>
