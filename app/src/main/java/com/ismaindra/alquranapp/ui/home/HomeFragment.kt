@@ -2,6 +2,10 @@ package com.ismaindra.alquranapp.ui.home
 
 import com.ismaindra.alquranapp.R
 import android.Manifest
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Address
@@ -27,6 +31,8 @@ import com.ismaindra.alquranapp.databinding.FragmentHomeBinding
 import com.ismaindra.alquranapp.ui.hadist.HadistAdapter
 import com.ismaindra.alquranapp.ui.hadist.HadistViewModel
 import com.ismaindra.alquranapp.utils.AuthManager
+import com.ismaindra.alquranapp.utils.NotificationHelper
+import com.ismaindra.alquranapp.utils.PrayerReceiver
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.net.URL
@@ -69,6 +75,8 @@ class HomeFragment : Fragment() {
 
         // Mulai alur lokasi
         checkGPS()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.POST_NOTIFICATIONS), 101)}
 
         viewModel.loadDoaAcak()
         hadistViewModel.getRandomHadist()
@@ -331,6 +339,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun processJadwal(jadwal: JSONObject) {
+        if (_binding == null || !isAdded) return
         val next = getNextSholat(jadwal)
         if (next != null) {
             nextName = next.first
@@ -347,8 +356,63 @@ class HomeFragment : Fragment() {
 
             val displayName = namesMap[nextName] ?: nextName?.replaceFirstChar { it.uppercase() }
             binding.tvPrayerName.text = displayName
+            scheduleNotification(next.first, next.second)
         }
     }
+
+//    private fun scheduleNotification(prayerName: String, delayMillis: Long) {
+//        val notificationHelper = NotificationHelper(requireContext())
+//
+//        // Untuk testing cepat (Notifikasi muncul setelah delay selesai)
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            delay(delayMillis)
+//            if (isAdded) {
+//                notificationHelper.showNotification(
+//                    "Waktunya Sholat",
+//                    "Telah masuk waktu $prayerName untuk wilayah Anda."
+//                )
+//            }
+//        }
+//    }
+private fun scheduleNotification(prayerName: String, delayMillis: Long) {
+    val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    // PERBAIKAN: Cek apakah aplikasi punya izin untuk Exact Alarm (Android 12+)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (!alarmManager.canScheduleExactAlarms()) {
+            // Jika tidak punya izin, buka pengaturan sistem agar user bisa mengizinkan
+            val intent = Intent().apply {
+                action = android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+            }
+            startActivity(intent)
+            Toast.makeText(context, "Mohon izinkan alarm tepat waktu agar notifikasi aktif", Toast.LENGTH_LONG).show()
+            return
+        }
+    }
+
+    val intent = Intent(requireContext(), PrayerReceiver::class.java).apply {
+        putExtra("prayer_name", prayerName)
+    }
+
+    val pendingIntent = PendingIntent.getBroadcast(
+        requireContext(),
+        0,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+
+    val triggerTime = System.currentTimeMillis() + delayMillis
+
+    try {
+        // PERBAIKAN: Gunakan try-catch untuk menghindari crash mendadak
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerTime,
+            pendingIntent
+        )
+    } catch (e: SecurityException) {
+        e.printStackTrace()
+    }
+}
 
     private fun extractCity(addr: Address): String {
         val locality = addr.locality ?: ""
