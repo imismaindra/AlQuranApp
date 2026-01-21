@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
+import android.provider.Settings
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -357,7 +358,7 @@ class HomeFragment : Fragment() {
 
             val displayName = namesMap[nextName] ?: nextName?.replaceFirstChar { it.uppercase() }
             binding.tvPrayerName.text = displayName
-            scheduleNotification(next.first, next.second)
+            scheduleNotificationsForDay(jadwal)
         }
     }
 
@@ -375,45 +376,77 @@ class HomeFragment : Fragment() {
 //            }
 //        }
 //    }
-private fun scheduleNotification(prayerName: String, delayMillis: Long) {
-    val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    // PERBAIKAN: Cek apakah aplikasi punya izin untuk Exact Alarm (Android 12+)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (!alarmManager.canScheduleExactAlarms()) {
-            // Jika tidak punya izin, buka pengaturan sistem agar user bisa mengizinkan
-            val intent = Intent().apply {
-                action = android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
-            }
+    private fun scheduleNotificationsForDay(jadwal: JSONObject) {
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val canExact = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager.canScheduleExactAlarms()
+        } else {
+            true
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canExact) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
             startActivity(intent)
-            Toast.makeText(context, "Mohon izinkan alarm tepat waktu agar notifikasi aktif", Toast.LENGTH_LONG).show()
-            return
+            Toast.makeText(
+                context,
+                "Izinkan alarm tepat waktu agar notifikasi lebih akurat",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale("id", "ID"))
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale("id", "ID")).format(Date())
+        val now = Date()
+        val prayers = listOf("subuh", "dzuhur", "ashar", "maghrib", "isya")
+
+        for (name in prayers) {
+            val timeString = jadwal.optString(name, "")
+            if (timeString.isBlank()) continue
+
+            val time = runCatching { dateFormat.parse("$today $timeString") }.getOrNull()
+            if (time != null && time.after(now)) {
+                scheduleAlarm(alarmManager, name, time.time, canExact)
+            }
         }
     }
 
-    val intent = Intent(requireContext(), PrayerReceiver::class.java).apply {
-        putExtra("prayer_name", prayerName)
-    }
+    private fun scheduleAlarm(
+        alarmManager: AlarmManager,
+        prayerName: String,
+        triggerAtMillis: Long,
+        canExact: Boolean
+    ) {
+        val intent = Intent(requireContext(), PrayerReceiver::class.java).apply {
+            putExtra("prayer_name", prayerName)
+        }
 
-    val pendingIntent = PendingIntent.getBroadcast(
-        requireContext(),
-        0,
-        intent,
-        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-    )
-
-    val triggerTime = System.currentTimeMillis() + delayMillis
-
-    try {
-        // PERBAIKAN: Gunakan try-catch untuk menghindari crash mendadak
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            triggerTime,
-            pendingIntent
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale("id", "ID")).format(Date())
+        val requestCode = "$today-$prayerName".hashCode()
+        val pendingIntent = PendingIntent.getBroadcast(
+            requireContext(),
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-    } catch (e: SecurityException) {
-        e.printStackTrace()
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canExact) {
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerAtMillis,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerAtMillis,
+                    pendingIntent
+                )
+            }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
     }
-}
 
     private fun extractCity(addr: Address): String {
         val locality = addr.locality ?: ""

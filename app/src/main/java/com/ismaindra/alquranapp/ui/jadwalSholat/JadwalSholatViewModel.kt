@@ -22,6 +22,7 @@ class JadwalSholatViewModel(
     // List hasil search (terpisah dari kotaList)
     private val _searchResults = MutableLiveData<List<Kota>>(emptyList())
     val searchResults: LiveData<List<Kota>> = _searchResults
+    private var lastSearchKeyword: String = ""
 
     private val _jadwal = MutableLiveData<Jadwal>()
     val jadwal: LiveData<Jadwal> = _jadwal
@@ -80,20 +81,27 @@ class JadwalSholatViewModel(
 
     // Search kota dari search bar (update searchResults)
     fun searchKota(keyword: String) {
+        val cleanKeyword = keyword.trim()
+        lastSearchKeyword = cleanKeyword
         viewModelScope.launch {
             runCatching {
-                repository.searchKota(keyword)
+                repository.searchKota(cleanKeyword)
             }.onSuccess { response ->
                 // Update hasil search, BUKAN kotaList
-                _searchResults.value = response.data ?: emptyList()
+                if (cleanKeyword == lastSearchKeyword) {
+                    _searchResults.value = response.data ?: emptyList()
+                }
             }.onFailure {
-                _searchResults.value = emptyList()
+                if (cleanKeyword == lastSearchKeyword) {
+                    _searchResults.value = emptyList()
+                }
             }
         }
     }
 
     // Clear hasil search
     fun clearSearch() {
+        lastSearchKeyword = ""
         _searchResults.value = emptyList()
     }
 

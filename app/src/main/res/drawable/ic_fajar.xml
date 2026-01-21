@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Sunrise icon -->
+    <path
+        android:pathData="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,4L12,12L17.73,6.27C15.66,4.9 13.44,4 12,4M12,20C7.59,20 4,16.41 4,12C4,10.88 4.26,9.82 4.71,8.88L12,17V20Z"
+        android:fillColor="#FF6B6B" />
+    <!-- Horizontal line -->
+    <path
+        android:pathData="M2,13L22,13"
+        android:strokeColor="#FF6B6B"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round" />
+</vector>

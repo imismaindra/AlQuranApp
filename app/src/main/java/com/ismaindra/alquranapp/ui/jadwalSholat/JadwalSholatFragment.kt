@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.LocationServices
@@ -24,6 +25,9 @@ import com.ismaindra.alquranapp.R
 import com.ismaindra.alquranapp.data.api.ExsternalRetrofitClient
 import com.ismaindra.alquranapp.data.model.Kota
 import com.ismaindra.alquranapp.data.repository.SholatRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -43,6 +47,7 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
     private lateinit var tvCountdown: TextView
     private lateinit var etSearchKota: EditText
     private lateinit var headerContainer: LinearLayout
+    private var searchJob: Job? = null
 
     private val jadwalAdapter = JadwalAdapter()
     private val bulananAdapter = JadwalBulananAdapter()
@@ -94,10 +99,16 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString().trim()
-                if (query.length >= 3) {
-                    viewModel.searchKota(query)
-                } else if (query.isEmpty()) {
+                searchJob?.cancel()
+                if (query.isEmpty()) {
                     viewModel.clearSearch()
+                    return
+                }
+                if (query.length >= 3) {
+                    searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                        delay(350)
+                        viewModel.searchKota(query)
+                    }
                 }
             }
             override fun afterTextChanged(s: Editable?) {}
@@ -131,12 +142,25 @@ class JadwalSholatFragment : Fragment(R.layout.fragment_jadwalsholat) {
         }
 
         viewModel.searchResults.observe(viewLifecycleOwner) { results ->
-            if (!results.isNullOrEmpty()) {
-                PilihKotaBottomSheet(results) { kota ->
-                    viewModel.selectKota(kota)
-                    etSearchKota.text.clear()
-                }.show(parentFragmentManager, "search_results")
+            val existing = parentFragmentManager.findFragmentByTag("search_results")
+            if (results.isNullOrEmpty()) {
+                if (existing is PilihKotaBottomSheet) {
+                    existing.dismiss()
+                }
+                return@observe
             }
+
+            existing?.let {
+                if (it is PilihKotaBottomSheet) {
+                    it.dismiss()
+                }
+            }
+
+            PilihKotaBottomSheet(results) { kota ->
+                viewModel.selectKota(kota)
+                etSearchKota.text.clear()
+                viewModel.clearSearch()
+            }.show(parentFragmentManager, "search_results")
         }
     }
 

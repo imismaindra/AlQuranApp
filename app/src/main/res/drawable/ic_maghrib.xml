@@ -4,7 +4,20 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+    <!-- Sun circle at horizon -->
     <path
-        android:fillColor="#EF5350"
-        android:pathData="M20,8.69V4h-4.69L12,0.69 8.69,4H4v4.69L0.69,12 4,15.31V20h4.69L12,23.31 15.31,20H20v-4.69L23.31,12 20,8.69zM12,18c-0.89,0 -1.74,-0.2 -2.5,-0.55C11.56,16.5 13,14.42 13,12s-1.44,-4.5 -3.5,-5.45C10.26,6.2 11.11,6 12,6c3.31,0 6,2.69 6,6s-2.69,6 -6,6z"/>
+        android:pathData="M16,12 A4,4 0 1,0 8,12 A4,4 0 1,0 16,12"
+        android:fillColor="#FF7043" />
+    <!-- Sun rays -->
+    <path
+        android:pathData="M12,0L12,2M12,16L12,18M22,12L20,12M2,12L0,12M20.49,3.51L18.87,5.13M6.13,18.87L4.51,20.49M20.49,20.49L18.87,18.87"
+        android:strokeColor="#FF7043"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round" />
+    <!-- Cloud overlapping sun -->
+    <path
+        android:pathData="M4,18C3.45,18 3,18.45 3,19C3,19.55 3.45,20 4,20L20,20C21.1,20 22,19.1 22,18C22,17.05 21.26,16.3 20.3,16.15C20.09,15.09 19.15,14.3 18,14.3C17.09,14.3 16.31,14.78 15.92,15.48"
+        android:fillColor="#FFB3A3"
+        android:strokeColor="#FF7043"
+        android:strokeWidth="0.5" />
 </vector>

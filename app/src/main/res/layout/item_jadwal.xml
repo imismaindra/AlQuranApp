@@ -1,90 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:paddingVertical="16dp"
-    android:paddingHorizontal="20dp"
-    android:background="@drawable/ripple_effect">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/bg_prayer_icon"
-        android:gravity="center"
-        android:layout_marginEnd="16dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="16dp">
 
+        <!-- Background Color Strip -->
+        <View
+            android:id="@+id/colorStrip"
+            android:layout_width="5dp"
+            android:layout_height="56dp"
+            android:background="#FF7A00"
+            android:layout_marginEnd="16dp"/>
+
+        <!-- Icon -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#FFF3E0"
+            android:layout_marginEnd="16dp">
+
+            <ImageView
+                android:id="@+id/ivPrayerIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_prayer"
+                android:tint="#FF7A00"/>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Content -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNama"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subuh"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#1a1a1a"
+                android:fontFamily="@font/poppins_bold"/>
+
+            <TextView
+                android:id="@+id/tvKeterangan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fajar"
+                android:textSize="12sp"
+                android:textColor="#9E9E9E"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/poppins_medium"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <!-- Time -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end"
+            android:layout_marginEnd="12dp">
+
+            <TextView
+                android:id="@+id/tvWaktu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="04:23"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#1a1a1a"
+                android:fontFamily="@font/poppins_bold"/>
+
+            <TextView
+                android:id="@+id/tvStatusWaktu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WIB"
+                android:textSize="11sp"
+                android:textColor="#9E9E9E"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/poppins_medium"/>
+        </LinearLayout>
+
+        <!-- Notification Bell -->
         <ImageView
-            android:id="@+id/ivPrayerIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_prayer"
-            android:tint="#FF7A00"/>
+            android:id="@+id/ivNotification"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_bell"
+            android:tint="#B0BEC5"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"/>
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvNama"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Subuh"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#212121"
-            android:letterSpacing="0.01" />
-
-        <TextView
-            android:id="@+id/tvKeterangan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fajar"
-            android:textSize="12sp"
-            android:textColor="#9E9E9E"
-            android:layout_marginTop="2dp"
-            android:visibility="gone"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end">
-
-        <TextView
-            android:id="@+id/tvWaktu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="04:23"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="#212121"
-            android:fontFamily="sans-serif-medium" />
-
-        <TextView
-            android:id="@+id/tvStatusWaktu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="WIB"
-            android:textSize="11sp"
-            android:textColor="#9E9E9E"
-            android:layout_marginTop="2dp"/>
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/ivNotification"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:src="@drawable/ic_bell"
-        android:tint="#BDBDBD"
-        android:layout_marginStart="12dp"
-        android:clickable="true"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="4dp"/>
-
-</LinearLayout>
+</androidx.cardview.widget.CardView>
