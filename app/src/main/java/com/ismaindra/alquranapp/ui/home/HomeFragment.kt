@@ -83,6 +83,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        binding.menuAlQuran.setOnClickListener { findNavController().navigate(R.id.action_home_to_surahList) }
         binding.menuDoaPage.setOnClickListener { findNavController().navigate(R.id.action_home_to_doaList) }
         binding.menuJadwalSholat.setOnClickListener { findNavController().navigate(R.id.action_home_to_jadwalSholat) }
         binding.menuHadist.setOnClickListener { findNavController().navigate(R.id.action_home_to_hadist) }
